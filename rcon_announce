@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo 'password'
+
+while true
+do
+  echo "/say Message one."
+  echo "/say Message two."
+  echo "/say Message three."
+  sleep 30
+  echo "/say Message four."
+  echo "/say Message five."
+  sleep 300
+done

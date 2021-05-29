@@ -1,0 +1,53 @@
+#!/bin/bash
+kill_log=/tmp/kill_log
+kill_count=/tmp/kill_count
+killer=/tmp/killer
+
+echo 'password'
+echo "" | tee $kill_count $killer
+
+while true
+do
+  if egrep -qa '\(*\) .*. killed .*. with *' $kill_log
+  then
+    egrep -a '\(*\) .*. killed .*. with *' $kill_log | sed 's/killed.*//;s/(.*.)//' >> $killer
+    echo "" > $kill_log
+    sort $killer | uniq -c | sed 's/^[[:space:]]*//' > $kill_count
+  elif egrep -qaw '^5' $kill_count
+  then
+    egrep -aw '^5' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is a killer!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^8' $kill_count
+  then
+    egrep -aw '^8' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is violent!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^11' $kill_count
+  then
+    egrep -aw '^11' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is dominating!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^14' $kill_count
+  then
+    egrep -aw '^14' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is crazy!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^17' $kill_count
+  then
+    egrep -aw '^17' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is taking over!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^20' $kill_count
+  then
+    egrep -aw '^20' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is unstoppable!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^22' $kill_count
+  then
+    egrep -aw '^22' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is a god!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^25' $kill_count
+  then
+    egrep -aw '^25' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is a cheater!!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  elif egrep -qaw '^27' $kill_count
+  then
+    egrep -aw '^27' $kill_count | sed 's/^[0-9]* /\/say/;s/$/, dude, stop it!!!/'
+    sed -i 's/^[0-9]*//' $kill_count
+  fi
+done

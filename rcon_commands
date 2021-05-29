@@ -1,0 +1,38 @@
+#!/bin/bash
+cmds=/tmp/cmds
+
+echo 'password'
+
+while true
+do
+  if egrep -qa '\[*\] !cmds$' $cmds
+  then
+    echo "" > $cmds
+    echo "/say !date, !info, !script, !red, !blue"
+  elif egrep -qa '\[*\] !script$' $cmds
+  then
+    echo "" > $cmds
+    echo "/say Soldat Shell v1.0"
+    echo "/say A Unix shell script made by a Unix guru."
+  elif egrep -qa '\[*\] !date$' $cmds
+  then
+    echo "" > $cmds
+    echo "/say `date`"
+  elif egrep -qa '\[*\] !info$' $cmds
+  then
+    echo "" > $cmds
+    echo "/say `uname -a`"
+  elif egrep -qa '\[*\] !red$' $cmds || egrep -qa '\[*\] !1$' $cmds
+  then
+    egrep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam1 /'
+    echo "" > $cmds
+  elif egrep -qa '\[*\] !blue$' $cmds || egrep -qa '\[*\] !2$' $cmds
+  then
+    egrep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam2 /'
+    echo "" > $cmds
+  elif egrep -qa '\[*\] !spec$' $cmds || egrep -qa '\[*\] !5$' $cmds
+  then
+    egrep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam5 /'
+    echo "" > $cmds
+  fi
+done
