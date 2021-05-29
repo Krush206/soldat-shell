@@ -2,6 +2,7 @@
 kill_log=/tmp/kill_log
 kill_count=/tmp/kill_count
 killer=/tmp/killer
+victim=/tmp/victim
 
 echo 'password'
 echo "" | tee $kill_count $killer
