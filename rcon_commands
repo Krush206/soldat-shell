@@ -2,6 +2,7 @@
 cmds=/tmp/cmds
 
 echo 'password'
+echo 'The rcon_commands shell script has been enabled!'
 
 while true
 do

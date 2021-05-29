@@ -6,6 +6,7 @@ victim=/tmp/victim
 
 echo 'password'
 echo "" | tee $kill_count $killer
+echo 'The rcon_kills shell script has been enabled!'
 
 while true
 do
