@@ -11,6 +11,8 @@ do
   if egrep -qa '\(*\) .*. killed .*. with *' $kill_log
   then
     egrep -a '\(*\) .*. killed .*. with *' $kill_log | sed 's/killed.*//;s/(.*.)//' >> $killer
+    egrep -a '\(*\) .*. killed .*. with *' $kill_log | sed 's/(.*)//;s/with*. .*//' > $victim
+    sed -i '/'"`cat $victim`"'/d' $killer
     echo "" > $kill_log
     sort $killer | uniq -c | sed 's/^[[:space:]]*//' > $kill_count
   elif egrep -qaw '^5' $kill_count
