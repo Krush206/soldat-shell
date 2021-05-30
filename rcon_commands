@@ -6,34 +6,34 @@ echo 'The rcon_commands shell script has been enabled!'
 
 while true
 do
-  if egrep -qa '\[*\] !cmds$' $cmds
+  if grep -qa '\[*\] !cmds$' $cmds
   then
     echo "" > $cmds
     echo "/say !date, !info, !script, !red, !blue"
-  elif egrep -qa '\[*\] !script$' $cmds
+  elif grep -qa '\[*\] !script$' $cmds
   then
     echo "" > $cmds
     echo "/say Soldat Shell v1.0"
     echo "/say A Unix shell script made by a Unix guru."
-  elif egrep -qa '\[*\] !date$' $cmds
+  elif grep -qa '\[*\] !date$' $cmds
   then
     echo "" > $cmds
     echo "/say `date`"
-  elif egrep -qa '\[*\] !info$' $cmds
+  elif grep -qa '\[*\] !info$' $cmds
   then
     echo "" > $cmds
     echo "/say `uname -a`"
-  elif egrep -qa '\[*\] !red$' $cmds || egrep -qa '\[*\] !1$' $cmds
+  elif grep -qa '\[*\] !red$' $cmds || grep -qa '\[*\] !1$' $cmds
   then
-    egrep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam1 /'
+    grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam1 /'
     echo "" > $cmds
-  elif egrep -qa '\[*\] !blue$' $cmds || egrep -qa '\[*\] !2$' $cmds
+  elif grep -qa '\[*\] !blue$' $cmds || grep -qa '\[*\] !2$' $cmds
   then
-    egrep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam2 /'
+    grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam2 /'
     echo "" > $cmds
-  elif egrep -qa '\[*\] !spec$' $cmds || egrep -qa '\[*\] !5$' $cmds
+  elif grep -qa '\[*\] !spec$' $cmds || grep -qa '\[*\] !5$' $cmds
   then
-    egrep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam5 /'
+    grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam5 /'
     echo "" > $cmds
   fi
 done
