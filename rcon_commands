@@ -25,15 +25,18 @@ do
     echo "/say `uname -a`"
   elif grep -qa '\[*\] !red$' $cmds || grep -qa '\[*\] !1$' $cmds
   then
-    grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam1 /'
+    sed -nu '/^\[.*.] !red$/p' $cmds | sed -u 's/^./\/setteam1 /;s/......$//'
+    sed -nu '/^\[.*.] !1$/p' $cmds | sed -u 's/^./\/setteam1 /;s/....$//'
     cat /dev/null > $cmds
   elif grep -qa '\[*\] !blue$' $cmds || grep -qa '\[*\] !2$' $cmds
   then
-    grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam2 /'
+    sed -nu '/^\[.*.] !blue$/p' $cmds | sed -u 's/^./\/setteam2 /;s/.......$//'
+    sed -nu '/^\[.*.] !2$/p' $cmds | sed -u 's/^./\/setteam2 /;s/....$//'
     cat /dev/null > $cmds
   elif grep -qa '\[*\] !spec$' $cmds || grep -qa '\[*\] !5$' $cmds
   then
-    grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam5 /'
+    sed -nu '/^\[.*.] !spec$/p' $cmds | sed -u 's/^./\/setteam5 /;s/.......$//'
+    sed -nu '/^\[.*.] !5$/p' $cmds | sed -u 's/^./\/setteam5 /;s/....$//'
     cat /dev/null > $cmds
   fi
 done

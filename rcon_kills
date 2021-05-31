@@ -12,46 +12,46 @@ while true
 do
   if grep -qa '(*) .*. killed .*. with *' $kill_log
   then
-    grep -a '(*) .*. killed .*. with *' $kill_log | sed 's/killed.*//;s/(.*.)//' >> $killer
-    grep -a '(*) .*. killed .*. with *' $kill_log | sed 's/(.*)//;s/with*. .*//' > $victim
-    sed -i '/'"`cat $victim`"'/d' $killer
+    sed -nu '/(*) .*. killed .*. with */p' $kill_log | sed -u 's/killed.*//;s/(.*.)//' >> $killer
+    sed -nu '/(*) .*. killed .*. with */p' $kill_log | sed -u 's/(.*)//;s/with*. .*//;s/[[:punct:]]/\\&/g' > $victim
+    sed -iu /"`cat $victim`"/d $killer
     cat /dev/null > $kill_log
     sort $killer | uniq -c | sed 's/^[[:space:]]*//' > $kill_count
   elif grep -qa '^5' $kill_count
   then
-    grep -a '^5' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is a killer!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^5/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is a killer!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^8' $kill_count
   then
-    grep -a '^8' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is violent!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^8/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is violent!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^11' $kill_count
   then
-    grep -a '^11' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is dominating!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^11/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is dominating!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^14' $kill_count
   then
-    grep -a '^14' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is crazy!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^14/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is crazy!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^17' $kill_count
   then
-    grep -a '^17' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is taking over!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^17/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is taking over!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^20' $kill_count
   then
-    grep -a '^20' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is unstoppable!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^20/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is unstoppable!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^22' $kill_count
   then
-    grep -a '^22' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is a god!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^22/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is a god!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^25' $kill_count
   then
-    grep -a '^25' $kill_count | sed 's/^[0-9]* /\/say/;s/$/is a cheater!!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^25/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/is a cheater!!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   elif grep -qa '^27' $kill_count
   then
-    grep -a '^27' $kill_count | sed 's/^[0-9]* /\/say/;s/$/, dude, stop it!!!/'
-    sed -i 's/^[0-9]*//' $kill_count
+    sed -nu '/^27/p' $kill_count | sed -u 's/^[0-9]* /\/say/;s/$/, dude, stop it!!!/'
+    sed -iu 's/^[0-9]*//' $kill_count
   fi
 done
