@@ -13,7 +13,7 @@ do
   elif grep -qa '\[*\] !script$' $cmds
   then
     cat /dev/null > $cmds
-    echo "/say Soldat Shell v1.0"
+    echo "/say Soldat Shell"
     echo "/say A Unix shell script made by a Unix guru."
   elif grep -qa '\[*\] !date$' $cmds
   then
