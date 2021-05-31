@@ -5,7 +5,7 @@ killer=/tmp/killer
 victim=/tmp/victim
 
 echo 'password'
-echo "" | tee $kill_count $killer
+cat /dev/null | tee $kill_count $killer
 echo 'The rcon_kills shell script has been enabled!'
 
 while true
@@ -15,7 +15,7 @@ do
     grep -a '(*) .*. killed .*. with *' $kill_log | sed 's/killed.*//;s/(.*.)//' >> $killer
     grep -a '(*) .*. killed .*. with *' $kill_log | sed 's/(.*)//;s/with*. .*//' > $victim
     sed -i '/'"`cat $victim`"'/d' $killer
-    echo "" > $kill_log
+    cat /dev/null > $kill_log
     sort $killer | uniq -c | sed 's/^[[:space:]]*//' > $kill_count
   elif grep -qa '^5' $kill_count
   then

@@ -8,32 +8,32 @@ while true
 do
   if grep -qa '\[*\] !cmds$' $cmds
   then
-    echo "" > $cmds
+    cat /dev/null > $cmds
     echo "/say !date, !info, !script, !red, !blue"
   elif grep -qa '\[*\] !script$' $cmds
   then
-    echo "" > $cmds
+    cat /dev/null > $cmds
     echo "/say Soldat Shell v1.0"
     echo "/say A Unix shell script made by a Unix guru."
   elif grep -qa '\[*\] !date$' $cmds
   then
-    echo "" > $cmds
+    cat /dev/null > $cmds
     echo "/say `date`"
   elif grep -qa '\[*\] !info$' $cmds
   then
-    echo "" > $cmds
+    cat /dev/null > $cmds
     echo "/say `uname -a`"
   elif grep -qa '\[*\] !red$' $cmds || grep -qa '\[*\] !1$' $cmds
   then
     grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam1 /'
-    echo "" > $cmds
+    cat /dev/null > $cmds
   elif grep -qa '\[*\] !blue$' $cmds || grep -qa '\[*\] !2$' $cmds
   then
     grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam2 /'
-    echo "" > $cmds
+    cat /dev/null > $cmds
   elif grep -qa '\[*\] !spec$' $cmds || grep -qa '\[*\] !5$' $cmds
   then
     grep -oa '\[.*.\]' $cmds | tail -n1 | sed 's/^.//;s/.$//;s/^/\/setteam5 /'
-    echo "" > $cmds
+    cat /dev/null > $cmds
   fi
 done
