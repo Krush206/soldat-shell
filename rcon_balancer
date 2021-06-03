@@ -1,0 +1,32 @@
+#!/bin/bash
+bal_log=/tmp/bal_log
+alpha=/tmp/alpha
+bravo=/tmp/bravo
+
+echo 'password'
+cat /dev/null | tee $alpha > $bravo
+echo 0 | tee $alpha\_count > $bravo\_count
+echo 'The rcon_balancer shell script has been enabled!'
+
+while true
+do
+  if grep -qa '^.* has joined alpha team\.$' $bal_log
+  then
+    sed -nu '/^.* has joined alpha team\.$/ s/ has joined alpha team\.//p' $bal_log >> $alpha
+    sort $alpha | uniq | wc -l > $alpha\_count
+    cat /dev/null > $bal_log
+  elif grep -qa '^.* has joined bravo team\.$' $bal_log
+  then
+    sed -nu '/^.* has joined bravo team\.$/ s/ has joined bravo team\.//p' $bal_log >> $bravo
+    sort $bravo | uniq | wc -l > $bravo\_count
+    cat /dev/null > $bal_log
+  elif [[ $(dc -e "`cat $alpha\_count` `cat $bravo\_count` - p") -ge 2 ]]
+  then
+    sed -nu '$s/^/\/setteam2 /p' $alpha
+    sed -iu \$d $alpha
+  elif [[ $(dc -e "`cat $bravo\_count` `cat $alpha\_count` - p") -ge 2 ]]
+  then
+    sed -nu '$s/^/\/setteam1 /p' $bravo
+    sed -iu \$d $bravo
+  fi
+done
