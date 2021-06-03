@@ -10,7 +10,7 @@ do
   if grep -qa '^\[.*] !cmds$' $cmds
   then
     cat /dev/null > $cmds
-    echo "/say !date, !info, !script, !red, !blue"
+    echo "/say !date, !info, !script, !red, !blue, !spec"
   elif grep -qa '^\[.*] !script$' $cmds
   then
     cat /dev/null > $cmds
