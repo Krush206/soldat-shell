@@ -7,37 +7,37 @@ echo 'The rcon_commands shell script has been enabled!'
 
 while true
 do
-  if grep -qa '\[*\] !cmds$' $cmds
+  if grep -qa '^\[.*] !cmds$' $cmds
   then
     cat /dev/null > $cmds
     echo "/say !date, !info, !script, !red, !blue"
-  elif grep -qa '\[*\] !script$' $cmds
+  elif grep -qa '^\[.*] !script$' $cmds
   then
     cat /dev/null > $cmds
     echo "/say Soldat Shell"
     echo "/say A Unix shell script made by a Unix guru."
-  elif grep -qa '\[*\] !date$' $cmds
+  elif grep -qa '^\[.*] !date$' $cmds
   then
     cat /dev/null > $cmds
     echo "/say `date`"
-  elif grep -qa '\[*\] !info$' $cmds
+  elif grep -qa '^\[.*] !info$' $cmds
   then
     cat /dev/null > $cmds
     echo "/say `uname -a`"
-  elif grep -qa '\[*\] !red$' $cmds || grep -qa '\[*\] !1$' $cmds
+  elif grep -qa '^\[.*] !red$' $cmds || grep -qa '^\[.*] !1$' $cmds
   then
-    sed -nu '/^\[.*.] !red$/p' $cmds | sed -u 's/^./\/setteam1 /;s/......$//'
-    sed -nu '/^\[.*.] !1$/p' $cmds | sed -u 's/^./\/setteam1 /;s/....$//'
+    sed -nu '/^\[.*] !red$/p' $cmds | sed -u 's/^./\/setteam1 /;s/......$//'
+    sed -nu '/^\[.*] !1$/p' $cmds | sed -u 's/^./\/setteam1 /;s/....$//'
     cat /dev/null > $cmds
-  elif grep -qa '\[*\] !blue$' $cmds || grep -qa '\[*\] !2$' $cmds
+  elif grep -qa '^\[.*] !blue$' $cmds || grep -qa '^\[.*] !2$' $cmds
   then
-    sed -nu '/^\[.*.] !blue$/p' $cmds | sed -u 's/^./\/setteam2 /;s/.......$//'
-    sed -nu '/^\[.*.] !2$/p' $cmds | sed -u 's/^./\/setteam2 /;s/....$//'
+    sed -nu '/^\[.*] !blue$/p' $cmds | sed -u 's/^./\/setteam2 /;s/.......$//'
+    sed -nu '/^\[.*] !2$/p' $cmds | sed -u 's/^./\/setteam2 /;s/....$//'
     cat /dev/null > $cmds
-  elif grep -qa '\[*\] !spec$' $cmds || grep -qa '\[*\] !5$' $cmds
+  elif grep -qa '^\[.*] !spec$' $cmds || grep -qa '^\[.*] !5$' $cmds
   then
-    sed -nu '/^\[.*.] !spec$/p' $cmds | sed -u 's/^./\/setteam5 /;s/.......$//'
-    sed -nu '/^\[.*.] !5$/p' $cmds | sed -u 's/^./\/setteam5 /;s/....$//'
+    sed -nu '/^\[.*] !spec$/p' $cmds | sed -u 's/^./\/setteam5 /;s/.......$//'
+    sed -nu '/^\[.*] !5$/p' $cmds | sed -u 's/^./\/setteam5 /;s/....$//'
     cat /dev/null > $cmds
   fi
 done
