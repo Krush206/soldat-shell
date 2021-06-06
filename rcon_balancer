@@ -1,7 +1,6 @@
 #!/bin/bash
 bal_log=/tmp/bal_log
 bal_ids=/tmp/bal_ids
-bal_diff=/tmp/bal_diff
 alpha=/tmp/alpha
 bravo=/tmp/bravo
 spectators=/tmp/spectators
@@ -16,8 +15,6 @@ echo 'The rcon_balancer shell script has been enabled!'
 
 while true
 do
-  dc -e "`cat $alpha\_count` `cat $bravo\_count` - p" > $bal_diff
-  dc -e "`cat $bravo\_count` `cat $alpha\_count` - p" >> $bal_diff
   find $alpha/ | sed -u 1d | wc -l > $alpha\_count
   find $bravo/ | sed -u 1d | wc -l > $bravo\_count
   if grep -qa '^.* joining game (.*) HWID:.*$' $bal_log
@@ -72,11 +69,11 @@ do
     cat $players/"`cat $spectators\_io2`" > $bal_ids\_io
     sed -iu "/`cat $bal_ids\_io`/ s/Used //" $bal_ids
     find /tmp/ -name "`cat $spectators\_io2`" -exec unlink '{}' \; 2> /dev/null
-  elif [[ `sed -nu 1p $bal_diff` -ge 2 ]]
+  elif [[ `dc -e "\`cat $alpha\_count\` \`cat $bravo\_count\` - p"` -ge 2 ]]
   then
     sed -nu '$s/^/\/setteam2 /p' $alpha/"`cat $alpha\_io`"
     unlink "$alpha/`cat $alpha\_io`" 2> /dev/null
-  elif [[ `sed -nu 2p $bal_diff` -ge 2 ]]
+  elif [[ `dc -e "\`cat $bravo\_count\` \`cat $alpha\_count\` - p"` -ge 2 ]]
   then
     sed -nu '$s/^/\/setteam1 /p' $bravo/"`cat $bravo\_io`"
     unlink "$bravo/`cat $bravo\_io`" 2> /dev/null
