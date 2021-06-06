@@ -62,7 +62,7 @@ do
     cat /dev/null > $bal_log
     grep -Ha "`cat $alpha\_io2`" $players/* | sed -u 's/:.*//;s/.*[^0-9]//' | \
     sed -iu "/^Used `cat`$/ s/Used //" $bal_ids
-    find /tmp/ -name `grep -Ha "\`cat $alpha\_io2\`" $players/* | \
+    find /tmp/ -mindepth 2 -name `grep -Ha "\`cat $alpha\_io2\`" $players/* | \
     sed 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; 2> /dev/null
   elif grep -qa '^.* has left bravo team\.$' $bal_log
   then
@@ -71,7 +71,7 @@ do
     cat /dev/null > $bal_log
     grep -Ha "`cat $bravo\_io2`" $players/* | sed -u 's/:.*//;s/.*[^0-9]//' | \
     sed -iu "/^Used `cat`$/ s/Used //" $bal_ids
-    find /tmp/ -name `grep -Ha "\`cat $bravo\_io2\`" $players/* | \
+    find /tmp/ -mindepth 2 -name `grep -Ha "\`cat $bravo\_io2\`" $players/* | \
     sed 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; 2> /dev/null
   elif grep -qa '^.* has left spectators$' $bal_log
   then
@@ -80,7 +80,7 @@ do
     cat /dev/null > $bal_log
     grep -Ha "`cat $spectators\_io2`" $players/* | sed -u 's/:.*//;s/.*[^0-9]//' | \
     sed -iu "/^Used `cat`$/ s/Used //" $bal_ids
-    find /tmp/ -name `grep -Ha "\`cat $spectators\_io2\`" $players/* | \
+    find /tmp/ -mindepth 2 -name `grep -Ha "\`cat $spectators\_io2\`" $players/* | \
     sed 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; 2> /dev/null
   elif [[ `dc -e "\`cat $alpha\_count\` \`cat $bravo\_count\` - p"` -ge 2 ]]
   then
