@@ -84,11 +84,15 @@ do
     sed 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; 2> /dev/null
   elif [[ `dc -e "\`cat $alpha\_count\` \`cat $bravo\_count\` - p"` -ge 2 ]]
   then
-    ls $alpha/ | sort | tail -n1 | sed -u 's/^/\/setteam2 /'
-    ls $alpha/ | sort | tail -n1 | unlink $alpha/`cat`
+    grep -Ha "`cat $alpha\_io`" $players/* | \
+    sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam2 /'
+    unlink $alpha/`grep -Ha "\`cat $alpha\_io\`" $players/* | \
+    sed -u "s/:.*//;s/.*[^0-9]//"` 2> /dev/null
   elif [[ `dc -e "\`cat $bravo\_count\` \`cat $alpha\_count\` - p"` -ge 2 ]]
   then
-    ls $bravo/ | sort | tail -n1 | sed -u 's/^/\/setteam1 /'
-    ls $bravo/ | sort | tail -n1 | unlink $bravo/`cat`
+    grep -Ha "`cat $bravo\_io`" $players/* | \
+    sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam1 /'
+    unlink $bravo/`grep -Ha "\`cat $bravo\_io\`" $players/* | \
+    sed -u "s/:.*//;s/.*[^0-9]//"` 2> /dev/null
   fi
 done
