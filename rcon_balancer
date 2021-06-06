@@ -32,14 +32,14 @@ do
     sed -nu '/^.* has joined alpha team\.$/ s/ has joined alpha team\.//p' \
     $bal_log | sed -u 's/[$*[\"^]/\\&/g' > $alpha\_io
     cat /dev/null > $bal_log
-    cat "$players/`cat $alpha\_io`" > "$alpha/`cat $alpha\_io`"
+    link "$players/`cat $alpha\_io`" "$alpha/`cat $alpha\_io`"
     unlink "$bravo/`cat $alpha\_io`" 2> /dev/null
   elif grep -qa '^.* has joined bravo team\.$' $bal_log
   then
     sed -nu '/^.* has joined bravo team\.$/ s/ has joined bravo team\.//p' \
     $bal_log | sed -u 's/[$*[\"^]/\\&/g' > $bravo\_io
     cat /dev/null > $bal_log
-    cat "$players/`cat $bravo\_io`" > "$bravo/`cat $bravo\_io`"
+    link "$players/`cat $bravo\_io`" "$bravo/`cat $bravo\_io`"
     unlink "$alpha/`cat $bravo\_io`" 2> /dev/null
   elif grep -qa '^.* has joined spectators\.$' $bal_log
   then
