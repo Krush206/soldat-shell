@@ -16,44 +16,44 @@ do
     s/(.*) //;s/.$//' >> $killer
     sed -nu '/(.*) .* killed .* with .*/p' $kill_log | sed -u 's/(.*) //;
     s/with.*//;s/.$//;s/[$.*[\^]/\\&/g' > $victim
-    sed -iu ''/`cat $victim`/d'' $killer
+    sed -i ''/`cat $victim`/d'' $killer
     cat /dev/null > $kill_log
     sort $killer | uniq -c | sed 's/^ *//' > $kill_count
   elif grep -qa '^5' $kill_count
   then
     sed -nu '/^5/p' $kill_count | sed -u 's/^../\/say /;s/$/ is a killer!/'
-    sed -iu 's/^..//' $kill_count
+    sed -i 's/^..//' $kill_count
   elif grep -qa '^8' $kill_count
   then
     sed -nu '/^8/p' $kill_count | sed -u 's/^../\/say /;s/$/ is violent!/'
-    sed -iu 's/^..//' $kill_count
+    sed -i 's/^..//' $kill_count
   elif grep -qa '^11' $kill_count
   then
     sed -nu '/^11/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is dominating!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   elif grep -qa '^14' $kill_count
   then
     sed -nu '/^14/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is crazy!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   elif grep -qa '^17' $kill_count
   then
     sed -nu '/^17/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is taking over!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   elif grep -qa '^20' $kill_count
   then
     sed -nu '/^20/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is unstoppable!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   elif grep -qa '^22' $kill_count
   then
     sed -nu '/^22/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is a god!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   elif grep -qa '^25' $kill_count
   then
     sed -nu '/^25/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is a cheater!!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   elif grep -qa '^27' $kill_count
   then
     sed -nu '/^27/p' $kill_count | sed -u 's/^.../\/say /;s/$/, dude, stop it!!!/'
-    sed -iu 's/^...//' $kill_count
+    sed -i 's/^...//' $kill_count
   fi
 done
