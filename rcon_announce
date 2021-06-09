@@ -12,4 +12,9 @@ do
   echo "/say Message four."
   echo "/say Message five."
   sleep 300
+  echo "/say This server makes use of Soldat Shell, or parts of it."
+  echo "/say Soldat Shell is released under the terms of the GNU AGPLv3 license."
+  echo "/say You may ask an administrator for the modified source code of this program."
+  echo "/say The original source code can be found at: https://github.com/Krush206/soldat-shell"
+  sleep 45
 done

@@ -11,11 +11,15 @@ do
   then
     cat /dev/null > $cmds
     echo "/say !date, !info, !script, !red, !blue, !spec"
-  elif grep -qa '^\[.*] !script$' $cmds
+  elif grep -qa '^\[.*] !script$' $cmds || \
+  grep -qa '^\[.*] !license$' $cmds || \
+  grep -qa '^\[.*] !source$' $cmds
   then
     cat /dev/null > $cmds
-    echo "/say Soldat Shell"
-    echo "/say A Unix shell script made by a Unix guru."
+    echo "/say Soldat Shell - A Unix shell script made by a Unix guru."
+    echo "/say Soldat Shell is released under the terms of the GNU AGPLv3 license."
+    echo "/say You may ask an administrator for the modified source code of this program."
+    echo "/say The original source code can be found at: https://github.com/Krush206/soldat-shell"
   elif grep -qa '^\[.*] !date$' $cmds
   then
     cat /dev/null > $cmds
