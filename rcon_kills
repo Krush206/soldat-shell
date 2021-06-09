@@ -26,54 +26,45 @@ do
   then
     sed -nu '/^5/p' $kill_count | sed -u 's/^../\/say /;s/$/ is a killer!/'
     sed -nu 's/^5 //p' $kill_count >> $killer\_lvl2
-    sed -i 's/^..//' $kill_count
   elif grep -qa '^8' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^8 //p' $kill_count`'' $killer\_lvl3
   then
     sed -nu '/^8/p' $kill_count | sed -u 's/^../\/say /;s/$/ is violent!/'
     sed -nu 's/^8 //p' $kill_count >> $killer\_lvl3
-    sed -i 's/^..//' $kill_count
   elif grep -qa '^11' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^11 //p' $kill_count`'' $killer\_lvl4
   then
     sed -nu '/^11/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is dominating!/'
     sed -nu 's/^11 //p' $kill_count >> $killer\_lvl4
-    sed -i 's/^...//' $kill_count
   elif grep -qa '^14' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^14 //p' $kill_count`'' $killer\_lvl5
   then
     sed -nu '/^14/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is crazy!/'
     sed -nu 's/^14 //p' $kill_count >> $killer\_lvl5
-    sed -i 's/^...//' $kill_count
   elif grep -qa '^17' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^17 //p' $kill_count`'' $killer\_lvl6
   then
     sed -nu '/^17/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is taking over!/'
     sed -nu 's/^17 //p' $kill_count >> $killer\_lvl6
-    sed -i 's/^...//' $kill_count
   elif grep -qa '^20' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^20 //p' $kill_count`'' $killer\_lvl7
   then
     sed -nu '/^20/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is unstoppable!/'
     sed -nu 's/^20 //p' $kill_count >> $killer\_lvl7
-    sed -i 's/^...//' $kill_count
   elif grep -qa '^22' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^22 //p' $kill_count`'' $killer\_lvl8
   then
     sed -nu '/^22/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is a god!/'
     sed -nu 's/^22 //p' $kill_count >> $killer\_lvl8
-    sed -i 's/^...//' $kill_count
   elif grep -qa '^25' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^25 //p' $kill_count`'' $killer\_lvl9
   then
     sed -nu '/^25/p' $kill_count | sed -u 's/^.../\/say /;s/$/ is a cheater!!/'
     sed -nu 's/^25 //p' $kill_count >> $killer\_lvl9
-    sed -i 's/^...//' $kill_count
   elif grep -qa '^27' $kill_count &&
   ! grep -Fxqa ''`sed -nu 's/^27 //p' $kill_count`'' $killer\_lvl10
   then
     sed -nu '/^27/p' $kill_count | sed -u 's/^.../\/say /;s/$/, dude, stop it!!!/'
     sed -nu 's/^27 //p' $kill_count >> $killer\_lvl10
-    sed -i 's/^...//' $kill_count
   fi
 done
