@@ -18,10 +18,10 @@ do
     echo "/say The original source code can be found at: https://github.com/Krush206/soldat-shell"
   elif echo -n ''$cmds'' | grep -qa '^\[.*] !date$'
   then
-    echo "/say `date`"
+    echo "/say $(date)"
   elif echo -n ''$cmds'' | grep -qa '^\[.*] !info$'
   then
-    echo "/say `uname -a`"
+    echo "/say $(uname -a)"
   elif echo -n ''$cmds'' | grep -qa '^\[.*] !red$' || \
   echo -n ''$cmds'' | grep -qa '^\[.*] !1$'
   then
