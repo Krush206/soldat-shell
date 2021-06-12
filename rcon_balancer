@@ -7,8 +7,8 @@ players=/tmp/players
 
 echo 'password'
 rm -rf $players $alpha $bravo 2> /dev/null
-cat /dev/null | tee $alpha\_io $alpha\_io2 \
-$bravo\_io $bravo\_io2 $spectators\_io > $spectators\_io2
+tee $alpha\_io $alpha\_io2 $bravo\_io $bravo\_io2 \
+$spectators\_io < /dev/null > $spectators\_io2
 seq 1 32 > $bal_ids
 echo 0 | tee $alpha\_count > $bravo\_count
 mkdir $alpha $bravo $players 2> /dev/null

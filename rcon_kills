@@ -4,9 +4,9 @@ killer=/tmp/killer
 victim=/tmp/victim
 
 echo 'password'
-cat /dev/null | tee $kill_count $killer $killer\_lvl2 \
-$killer\_lvl3 $killer\_lvl4 $killer\_lvl5 $killer\_lvl6 \
-$killer\_lvl7 $killer\_lvl8 $killer\_lvl9 > $killer\_lvl10
+tee $kill_count $killer $killer\_lvl2 $killer\_lvl3 \
+$killer\_lvl4 $killer\_lvl5 $killer\_lvl6 $killer\_lvl7 \
+$killer\_lvl8 $killer\_lvl9 < /dev/null > $killer\_lvl10
 echo 'The rcon_kills shell script has been enabled!'
 
 while read -r kill_log
