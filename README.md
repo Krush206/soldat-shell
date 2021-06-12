@@ -8,7 +8,7 @@ Shell (Bash) scripts for Soldat dedicated servers.
 *rcon_balancer*: Check for inconsistency in Alpha and Bravo teams and automatically switch the team of the last player who joined.
 
 #### How to use
-Install [*socat*](http://www.dest-unreach.org/socat), change the password inside the scripts, change their execution permissions and run the following:\
+Install [socat](http://www.dest-unreach.org/socat), change the password inside the scripts, change their execution permissions and run the following:\
 `./rcon_announce | nc <server ip> <port> > /dev/null &`\
 `socat exec:"./rcon_commands" system:"nc <server ip> <port> | dos2unix" &`\
 `socat exec:"./rcon_kills" system:"nc <server ip> <port> | dos2unix" &`\
@@ -17,6 +17,6 @@ Install [*socat*](http://www.dest-unreach.org/socat), change the password inside
 #### Notes
 Since I made them on GNU/Linux, it is unlikely that Unix or other Unix-like operating systems (including macOS) be able to run them, because GNU programs tend to be and act different than these found in Unix and other Unix-like operating systems. However, *BSD and illumos users may already have or can install GNU programs, so they just need to adapt their environment.
 
-Windows users may use Busybox or Cygwin to run the scripts (but they haven't been tested on this platform; testing is required).
+Windows users may use [Cygwin](https://cygwin.com) to run the scripts (but they haven't been tested on this platform; testing is required).
 
 On Unix and Unix-like operating systems, it is recommended to have a `tmpfs` mount on `/tmp`.
