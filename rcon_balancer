@@ -19,8 +19,10 @@ do
   if echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$'
   then
     echo -n "$bal_log" | \
-    sed --posix -u 's/ joining.*//' > $players/$(grep -am1 '^[0-9]' $bal_ids)
-    sed --posix -i "/^$(grep -am1 ^[0-9] $bal_ids)$/ s/^/Used /" $bal_ids
+    sed --posix -u 's/ joining.*//' > $players/$(sed --posix -nu \
+    '/^[0-9]/{p;q}' $bal_ids)
+    sed --posix -i "/^$(sed --posix -nu \
+    '/^[0-9]/{p;q}' $bal_ids)$/ s/^/Used /" $bal_ids
   elif echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$'
   then
     echo -n "$bal_log" | \
