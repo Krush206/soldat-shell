@@ -16,56 +16,56 @@ echo 'The rcon_balancer shell script has been enabled!'
 
 while read -r bal_log
 do
-  if echo -n ''$bal_log'' | grep -qa '^.* joining game (.*) HWID:.*$'
+  if echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ joining.*//' > $players/$(grep -am1 '^[0-9]' $bal_ids)
     sed -i "/^$(grep -am1 ^[0-9] $bal_ids)$/ s/^/Used /" $bal_ids
-  elif echo -n ''$bal_log'' | grep -qa '^.* has joined alpha team\.$'
+  elif echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ has joined alpha team\.//' > $alpha\_io
     link $players/$(grep -FHax "$(cat $alpha\_io)" $players/* | \
     sed -u "s/:.*//;s/.*[^0-9]//") $alpha/$(grep -FHax "$(cat $alpha\_io)" \
     $players/* | sed -u "s/:.*//;s/.*[^0-9]//") 2> /dev/null
     unlink $bravo/$(grep -FHax "$(cat $alpha\_io)" $players/* | \
     sed -u "s/:.*//;s/.*[^0-9]//") 2> /dev/null
-  elif echo -n ''$bal_log'' | grep -qa '^.* has joined bravo team\.$'
+  elif echo -n "$bal_log" | grep -qa '^.* has joined bravo team\.$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ has joined bravo team\.//' > $bravo\_io
     link $players/$(grep -FHax "$(cat $bravo\_io)" $players/* | \
     sed -u "s/:.*//;s/.*[^0-9]//") $bravo/$(grep -FHax "$(cat $bravo\_io)" \
     $players/* | sed -u "s/:.*//;s/.*[^0-9]//") 2> /dev/null
     unlink $alpha/$(grep -FHax "$(cat $bravo\_io)" $players/* | \
     sed -u "s/:.*//;s/.*[^0-9]//") 2> /dev/null
-  elif echo -n ''$bal_log'' | grep -qa '^.* has joined spectators\.$'
+  elif echo -n "$bal_log" | grep -qa '^.* has joined spectators\.$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ has joined spectators\.//' > $spectators\_io
     unlink $alpha/$(grep -FHax "$(cat $spectators\_io)" $players/* | \
     sed -u "s/:.*//;s/.*[^0-9]//") 2> /dev/null
     unlink $bravo/$(grep -FHax "$(cat $spectators\_io)" $players/* | \
     sed -u "s/:.*//;s/.*[^0-9]//") 2> /dev/null
-  elif echo -n ''$bal_log'' | grep -qa '^.* has left alpha team\.$'
+  elif echo -n "$bal_log" | grep -qa '^.* has left alpha team\.$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ has left alpha team\.//' > $alpha\_io2
     grep -FHax "$(cat $alpha\_io2)" $players/* | sed -u 's/:.*//;s/.*[^0-9]//' | \
     sed -i "/^Used $(cat)$/ s/Used //" $bal_ids
     find /tmp/ -mindepth 2 -name $(grep -FHax "$(cat $alpha\_io2)" $players/* | \
     sed 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
-  elif echo -n ''$bal_log'' | grep -qa '^.* has left bravo team\.$'
+  elif echo -n "$bal_log" | grep -qa '^.* has left bravo team\.$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ has left bravo team\.//' > $bravo\_io2
     grep -FHax "$(cat $bravo\_io2)" $players/* | sed -u 's/:.*//;s/.*[^0-9]//' | \
     sed -i "/^Used $(cat)$/ s/Used //" $bal_ids
     find /tmp/ -mindepth 2 -name $(grep -FHax "$(cat $bravo\_io2)" $players/* | \
     sed 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
-  elif echo -n ''$bal_log'' | grep -qa '^.* has left spectators$'
+  elif echo -n "$bal_log" | grep -qa '^.* has left spectators$'
   then
-    echo -n ''$bal_log'' | \
+    echo -n "$bal_log" | \
     sed -u 's/ has left spectators//' > $spectators\_io2
     grep -FHax "$(cat $spectators\_io2)" $players/* | sed -u 's/:.*//;s/.*[^0-9]//' | \
     sed -i "/^Used $(cat)$/ s/Used //" $bal_ids
