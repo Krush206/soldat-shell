@@ -54,7 +54,7 @@ do
     grep -FHax "$(cat $alpha\_io2)" $players/* | sed --posix -u 's/:.*//;s/.*[^0-9]//' | \
     sed --posix -i "/^Used $(cat)$/ s/Used //" $bal_ids
     find /tmp/ -mindepth 2 -name $(grep -FHax "$(cat $alpha\_io2)" $players/* | \
-    sed --posix 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
+    sed --posix -u 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
   elif echo -n "$bal_log" | grep -qa '^.* has left bravo team\.$'
   then
     echo -n "$bal_log" | \
@@ -62,7 +62,7 @@ do
     grep -FHax "$(cat $bravo\_io2)" $players/* | sed --posix -u 's/:.*//;s/.*[^0-9]//' | \
     sed --posix -i "/^Used $(cat)$/ s/Used //" $bal_ids
     find /tmp/ -mindepth 2 -name $(grep -FHax "$(cat $bravo\_io2)" $players/* | \
-    sed --posix 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
+    sed --posix -u 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
   elif echo -n "$bal_log" | grep -qa '^.* has left spectators$'
   then
     echo -n "$bal_log" | \
@@ -70,7 +70,7 @@ do
     grep -FHax "$(cat $spectators\_io2)" $players/* | sed --posix -u 's/:.*//;s/.*[^0-9]//' | \
     sed --posix -i "/^Used $(cat)$/ s/Used //" $bal_ids
     find /tmp/ -mindepth 2 -name $(grep -FHax "$(cat $spectators\_io2)" $players/* | \
-    sed --posix 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
+    sed --posix -u 's/:.*//;s/.*[^0-9]//') -exec unlink '{}' \; 2> /dev/null
   fi
   find $alpha/ | sed --posix -u 1d | wc -l > $alpha\_count
   find $bravo/ | sed --posix -u 1d | wc -l > $bravo\_count
