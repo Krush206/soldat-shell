@@ -25,14 +25,14 @@ do
   elif echo -n "$cmds" | grep -qa '^\[.*] !red$' || \
   echo -n "$cmds" | grep -qa '^\[.*] !1$'
   then
-    echo "$cmds" | sed -u 's/] !.*$//;s/^\[/\/setteam1 /'
+    echo "$cmds" | sed --posix -u 's/] !.*$//;s/^\[/\/setteam1 /'
   elif echo -n "$cmds" | grep -qa '^\[.*] !blue$' || \
   echo -n "$cmds" | grep -qa '^\[.*] !2$'
   then
-    echo "$cmds" | sed -u 's/] !.*$//;s/^\[/\/setteam2 /'
+    echo "$cmds" | sed --posix -u 's/] !.*$//;s/^\[/\/setteam2 /'
   elif echo -n "$cmds" | grep -qa '^\[.*] !spec$' || \
   echo -n "$cmds" | grep -qa '^\[.*] !5$'
   then
-    echo "$cmds" | sed -u 's/] !.*$//;s/^\[/\/setteam5 /'
+    echo "$cmds" | sed --posix -u 's/] !.*$//;s/^\[/\/setteam5 /'
   fi
 done
