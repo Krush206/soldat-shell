@@ -17,6 +17,8 @@ Install [socat](http://www.dest-unreach.org/socat), change the password inside t
 #### Notes
 Since I made them on GNU/Linux, it is unlikely that Unix or other Unix-like operating systems (including macOS) be able to run them, because GNU programs tend to be and act different than these found in Unix and other Unix-like operating systems. However, *BSD and illumos users may already have or can install GNU programs, so they just need to adapt their environment.
 
+Even though the above is true, I'm writing the scripts with POSIX in mind.
+
 Windows users may use [Cygwin](https://cygwin.com) to run the scripts (but they haven't been tested on this platform; testing is required).
 
 On Unix and Unix-like operating systems, it is recommended to have a `tmpfs` mount on `/tmp`.
