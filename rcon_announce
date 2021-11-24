@@ -1,10 +1,9 @@
-#!/bin/bash
+#!/bin/csh -f
 
 echo 'password'
-echo 'The rcon_announce shell script has been enabled!'
+echo 'The rcon_announce C shell script has been enabled!'
 
-while true
-do
+while 1
   echo "/say Message one."
   echo "/say Message two."
   echo "/say Message three."
@@ -17,4 +16,4 @@ do
   echo "/say You may ask an administrator for the modified source code of this program."
   echo "/say The original source code can be found at: https://github.com/Krush206/soldat-shell"
   sleep 45
-done
+end
