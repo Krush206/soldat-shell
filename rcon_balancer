@@ -15,10 +15,10 @@ bal_log:
   setenv bal_log "$<"
 
 if ( { ( echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$' ) } ) then
-  setenv joiner "`sed -nu '/^[0-9]/{l;q;}' $bal_ids`"
+  setenv joiner "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo -n "$bal_log" | \
-  sed -u 's/ joining.*//' > $players/`echo -n $joiner | sed 's/.$//'`
-  sed -i '' "/^$joiner/ s/^/Used /" $bal_ids
+  sed -u 's/ joining.*//' > $players/$joiner
+  sed -i '' "/^`echo -n $joiner | sed -n l`/ s/^/Used /" $bal_ids
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
   echo -n "$bal_log" | \
   setenv alpha_io_check "`sed -u 's/ has joined alpha team\.//'`"
