@@ -7,7 +7,7 @@ cmds:
   setenv cmds "$<"
 
 if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!cmds$' ) } ) then
-  echo "/say !date, !info, !script, !red, !blue, !spec"
+  echo "/say \!date, \!info, \!script, \!red, \!blue, \!spec"
 else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!script$' || \
 echo -n "$cmds" | grep -qa '^\[.*] \!license$' || \
 echo -n "$cmds" | grep -qa '^\[.*] \!source$' ) } ) then
