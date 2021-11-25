@@ -5,7 +5,7 @@ bravo=/tmp/bravo
 spectators=/tmp/spectators
 players=/tmp/players
 
-echo 'password'
+echo "$1"
 rm -rf $players $alpha $bravo 2> /dev/null
 tee $alpha\_io $alpha\_io2 $bravo\_io $bravo\_io2 \
 $spectators\_io < /dev/null > $spectators\_io2

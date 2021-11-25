@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo 'password'
+echo "$1"
 echo 'The rcon_announce shell script has been enabled!'
 
 while true
