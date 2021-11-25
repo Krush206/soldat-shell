@@ -10,9 +10,9 @@ C Shell scripts for Soldat dedicated servers.
 #### How to use
 Install [socat](http://www.dest-unreach.org/socat), change the password inside the scripts, change their execution permissions and run the following:\
 `./rcon_announce | nc <server ip> <port> > /dev/null &`\
-`socat exec:"./rcon_commands" tcp:<server ip>:<port>,crnl &`\
-`socat exec:"./rcon_kills" tcp:<server ip>:<port>,crnl &`\
-`socat exec:"./rcon_balancer" tcp:<server ip>:<port>,crnl &`
+`socat exec:"./rcon_commands <password>" tcp:<server ip>:<port>,crnl &`\
+`socat exec:"./rcon_kills <password>" tcp:<server ip>:<port>,crnl &`\
+`socat exec:"./rcon_balancer <password>" tcp:<server ip>:<port>,crnl &`
 
 #### Notes
 The scripts were made in FreeBSD. *BSD programs are different than these from GNU/Linux systems.

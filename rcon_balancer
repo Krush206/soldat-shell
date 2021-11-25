@@ -5,7 +5,7 @@ setenv bravo /tmp/bravo
 setenv spectators /tmp/spectators
 setenv players /tmp/players
 
-echo 'password'
+echo "$1" # RCON password
 rm -rf $players $alpha $bravo >& /dev/null
 seq 1 32 > $bal_ids
 mkdir $alpha $bravo $players >& /dev/null
