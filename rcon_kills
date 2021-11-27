@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/tcsh -f
 setenv kill_count /tmp/kill_count
 setenv killer /tmp/killer
 setenv victim /tmp/victim

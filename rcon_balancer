@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/tcsh -f
 setenv bal_ids /tmp/bal_ids
 setenv alpha /tmp/alpha
 setenv bravo /tmp/bravo
