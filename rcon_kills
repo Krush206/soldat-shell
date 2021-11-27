@@ -1,4 +1,11 @@
 #!/bin/tcsh -f
+if (`uname -s` == Linux) then
+  setenv sedimp 'sed -i'
+else if (`uname -s` == FreeBSD || `uname -s` == NetBSD || \
+`uname -s` == DragonFlyBSD || `uname -s` == OpenBSD) then
+  setenv sedimp 'sed -i '\'''\'''
+endif
+
 setenv kill_count /tmp/kill_count
 setenv killer /tmp/killer
 setenv victim /tmp/victim
@@ -17,7 +24,7 @@ if ( { ( echo -n "$kill_log" | grep -qa '^([0-9]*) .* killed .* with .*$' ) } ) 
   sed -u 's/ killed.*//;s/... //' >> $killer
   echo "$kill_log" | grep -a '^([0-9]*) .* killed .* with .*$' | \
   sed -u 's/ with.*//;s/.*killed ... //;s/[$.*[\^]/\\&/g' > $victim
-  sed -i '' "/`cat $victim`/d" $killer $killer\_lvl[1-9]*
+  $sedimp "/`cat $victim`/d" $killer $killer\_lvl[1-9]*
   sort $killer | uniq -c | sed -u 's/^ *//' > $kill_count
   if ( { ( grep -qa '^5' $kill_count ) } && ! { ( \
   grep -Fxqa "`sed -nu 's/^5 //p' $kill_count`" $killer\_lvl2 ) } ) then
