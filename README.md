@@ -15,8 +15,6 @@ Install [socat](http://www.dest-unreach.org/socat), change the scripts' executio
 `socat exec:"./rcon_balancer <password>" tcp:<server ip>:<port>,crnl &`
 
 #### Notes
-The scripts were made in FreeBSD. *BSD programs are different than these from GNU/Linux systems.
-
 Windows users may use [Cygwin](https://cygwin.com) to run the scripts (but they haven't been tested on this platform; testing is required).
 
 On Unix and Unix-like operating systems, it is recommended to have a `tmpfs` mount on `/tmp`.
