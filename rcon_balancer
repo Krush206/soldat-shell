@@ -74,8 +74,8 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left spectators$' ) } ) the
   find /tmp/ -mindepth 2 -name `grep -FHax "$spectators_io2_check" $players/* | \
   sed -u 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; >& /dev/null
 endif
-setenv alpha_count "`find $alpha/ | sed -u 1d | wc -l`"
-setenv bravo_count "`find $bravo/ | sed -u 1d | wc -l`"
+setenv alpha_count "`find $alpha/ -mindepth 1 | wc -l`"
+setenv bravo_count "`find $bravo/ -mindepth 1 | wc -l`"
 if ( `dc -e "$alpha_count $bravo_count - p"` >= 2 ) then
   grep -FHax "$alpha_io_check" $players/* | \
   sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam2 /'
