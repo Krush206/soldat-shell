@@ -47,10 +47,10 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined bravo team\.$' ) } )
   $players/* | sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
   unlink $alpha/`grep -FHax "$bravo_io_check" $players/* | \
   sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined as spectator$' ) } ) then
+else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined as spectator\.$' ) } ) then
   setenv joiner "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo -n "$bal_log" | \
-  sed -u 's/ has joined as spectator$//' > $players/$joiner
+  sed -u 's/ has joined as spectator\.$//' > $players/$joiner
   $sedimp "/^$joiner"\$"/ s/^/Used /" $bal_ids
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined spectators\.$' ) } ) then
   echo -n "$bal_log" | \
