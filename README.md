@@ -8,7 +8,7 @@ C Shell scripts for Soldat dedicated servers.
 *rcon_balancer*: Check for inconsistency in Alpha and Bravo teams and automatically switch the team of the last player who joined.
 
 #### How to use
-Install [socat](http://www.dest-unreach.org/socat), change the password inside the scripts, change their execution permissions and run the following:\
+Install [socat](http://www.dest-unreach.org/socat), change the scripts' execution permissions and run the following:\
 `./rcon_announce | nc <server ip> <port> > /dev/null &`\
 `socat exec:"./rcon_commands <password>" tcp:<server ip>:<port>,crnl &`\
 `socat exec:"./rcon_kills <password>" tcp:<server ip>:<port>,crnl &`\
