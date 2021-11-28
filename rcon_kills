@@ -11,7 +11,8 @@ kill_log:
   setenv kill_log "$<"
 
 if ( { ( echo -n "$kill_log" | grep -qa '^([0-9]*) .* killed ([0-9]*) .* with .*$' ) } ) then
-  setenv killer_check `echo -n "$kill_log" | sed -u 's/ killed.*//;s/... //'`
+  setenv killer_check `echo -n "$kill_log" | \
+  sed -u 's/ killed.*//;s/... //;s/\\/\\\\/g'`
   setenv killer `echo -n "$killer_check\n$killer"`
   setenv victim `echo -n "$kill_log" | sed -u 's/ with.*//;s/.*killed ... //'`
   setenv killer `echo -n "$killer" | sed -u "s/$victim\\n//g"`
