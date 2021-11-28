@@ -1,10 +1,4 @@
 #!/bin/tcsh -f
-if (`uname -s` == Linux) then
-  setenv sedimp 'sed -i'
-else if (`uname -s` == FreeBSD || `uname -s` == NetBSD || \
-`uname -s` == DragonFlyBSD || `uname -s` == OpenBSD) then
-  setenv sedimp 'sed -i '\'''\'''
-endif
 
 setenv kill_count /tmp/kill_count
 setenv killer
