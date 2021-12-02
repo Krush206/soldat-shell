@@ -30,9 +30,9 @@ if ( { ( echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$' ) } && !
   sed -u 's/ joining.*//' > $players/`echo -n $joiner`
   sed -i '' "/^$joiner"\$"/ s/^/Used /" $bal_ids
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
-  setenv alpha_io_check `echo -n "$bal_log" | \
-  sed -u 's/ has joined alpha team\.$//'`
-  if ( { ( grep -Fqxa "$alpha_io_check" $players/[1-9]* ) } ) then
+  echo -n "$bal_log" | \
+  sed -u 's/ has joined alpha team\.$//' > $players/joiner_io &
+  if ( { ( grep -Fqxaf $players/joiner_io $players/[1-9]* ) } ) then
     echo -n "$bal_log" | \
     setenv alpha_io_check "`sed -u 's/ has joined alpha team\.//'`"
     link $players/`grep -FHax "$alpha_io_check" $players/[1-9]* | \
@@ -44,9 +44,9 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } )
     goto bal_log
   endif
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined bravo team\.$' ) } ) then
-  setenv bravo_io_check `echo -n "$bal_log" | \
-  sed -u 's/ has joined bravo team\.$//'`
-  if ( { ( grep -Fqxa "$bravo_io_check" $players/[1-9]* ) } ) then
+  echo -n "$bal_log" | \
+  sed -u 's/ has joined bravo team\.$//' > $players/joiner_io &
+  if ( { ( grep -Fqxaf $players/joiner_io $players/[1-9]* ) } ) then
     echo -n "$bal_log" | \
     setenv bravo_io_check "`sed -u 's/ has joined bravo team\.//'`"
     link $players/`grep -FHax "$bravo_io_check" $players/[1-9]* | \
@@ -58,9 +58,9 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined bravo team\.$' ) } )
     goto bal_log
   endif
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined spectators\.$' ) } ) then
-  setenv spectators_io_check `echo -n "$bal_log" | \
-  sed -u 's/ has joined spectators\.$//'`
-  if ( { ( grep -Fqxa "$spectators_io_check" $players/[1-9]* ) } ) then
+  echo -n "$bal_log" | \
+  sed -u 's/ has joined spectators\.$//' > $players/joiner_io &
+  if ( { ( grep -Fqxaf $players/joiner_io $players/[1-9]* ) } ) then
     echo -n "$bal_log" | \
     setenv spectators_io_check "`sed -u 's/ has joined spectators\.//'`"
     unlink $alpha/`grep -FHax "$spectators_io_check" $players/[1-9]* | \
@@ -71,9 +71,9 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined spectators\.$' ) } )
     goto bal_log
   endif
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left alpha team\.$' ) } ) then
-  setenv alpha_io2_check `echo -n "$bal_log" | \
-  sed -u 's/ has left alpha team\.$//'`
-  if ( { ( grep -Fqxa "$alpha_io2_check" $players/[1-9]* ) } ) then
+  echo -n "$bal_log" | \
+  sed -u 's/ has left alpha team\.$//' > $players/joiner_io &
+  if ( { ( grep -Fqxaf $players/joiner_io $players/[1-9]* ) } ) then
     echo -n "$bal_log" | \
     setenv alpha_io2_check "`sed -u 's/ has left alpha team\.//'`"
     grep -FHax "$alpha_io2_check" $players/[1-9]* | \
@@ -84,9 +84,9 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left alpha team\.$' ) } ) t
     goto bal_log
   endif
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left bravo team\.$' ) } ) then
-  setenv bravo_io2_check `echo -n "$bal_log" | \
-  sed -u 's/ has left bravo team\.$//'`
-  if ( { ( grep -Fqxa "$bravo_io2_check" $players/[1-9]* ) } ) then
+  echo -n "$bal_log" | \
+  sed -u 's/ has left bravo team\.$//' > $players/joiner_io &
+  if ( { ( grep -Fqxaf $players/joiner_io $players/[1-9]* ) } ) then
     echo -n "$bal_log" | \
     setenv bravo_io2_check "`sed -u 's/ has left bravo team\.//'`"
     grep -FHax "$bravo_io2_check" $players/[1-9]* | \
@@ -97,9 +97,9 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left bravo team\.$' ) } ) t
     goto bal_log
   endif
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
-  setenv spectators_io2_check `echo -n "$bal_log" | \
-  sed -u 's/ has left spectators$//'`
-  if ( { ( grep -Fqxa "$spectators_io2_check" $players/[1-9]* ) } ) then
+  echo -n "$bal_log" | \
+  sed -u 's/ has left spectators$//' > $players/joiner_io &
+  if ( { ( grep -Fqxaf $players/joiner_io $players/[1-9]* ) } ) then
     echo -n "$bal_log" | \
     setenv spectators_io2_check "`sed -u 's/ has left spectators//'`"
     grep -FHax "$spectators_io2_check" $players/[1-9]* | \
