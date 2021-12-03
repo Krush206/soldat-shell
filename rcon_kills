@@ -1,8 +1,15 @@
 #!/bin/tcsh -f
+if (`uname -s` == Linux) then
+  setenv sedimp 'sed -i'
+else if (`uname -s` == FreeBSD || `uname -s` == NetBSD || \
+`uname -s` == DragonFlyBSD || `uname -s` == OpenBSD) then
+  setenv sedimp 'sed -i '\'''\'''
+endif
 
 setenv kill_count /tmp/kill_count
-setenv killer
-mkfifo $kill_count\_io >& /dev/null
+setenv killer /tmp/killer
+echo -n "" > $kill_count\_check
+mkfifo $killer\_clear >& /dev/null
 
 echo "$1" # RCON password
 echo 'The rcon_kills C shell script has been enabled!'
@@ -11,31 +18,30 @@ kill_log:
   setenv kill_log "$<"
 
 if ( { ( echo -n "$kill_log" | grep -qa '^([0-9]*) .* killed ([0-9]*) .* with .*$' ) } ) then
-  setenv killer_check `echo -n "$kill_log" | \
-  sed -u 's/ killed.*//;s/... //;s/\\/\\\\/g'`
-  setenv killer `echo -n "$killer_check\n$killer"`
-  setenv victim `echo -n "$kill_log" | sed -u 's/ with.*//;s/.*killed ... //'`
-  setenv killer `echo -n "$killer" | sed -u "s/$victim\\n//g"`
-  printf "$killer" > $kill_count\_io &
-  sort $kill_count\_io | uniq -c | sed -u 's/^ *//' > $kill_count
-  if ( { ( grep -qa "^5 $killer_check" $kill_count ) } ) then
-    sed -nu "/^5 $killer_check/p" $kill_count | sed -u 's/^../\/say /;s/$/ is a killer\!/'
-  else if ( { ( grep -qa "^8 $killer_check" $kill_count ) } ) then
-    sed -nu "/^8 $killer_check/p" $kill_count | sed -u 's/^../\/say /;s/$/ is violent\!/'
-  else if ( { ( grep -qa "^11 $killer_check" $kill_count ) } ) then
-    sed -nu "/^11 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is dominating\!/'
-  else if ( { ( grep -qa "^14 $killer_check" $kill_count ) } ) then
-    sed -nu "/^14 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is crazy\!/'
-  else if ( { ( grep -qa "^17 $killer_check" $kill_count ) } ) then
-    sed -nu "/^17 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is taking over\!/'
-  else if ( { ( grep -qa "^20 $killer_check" $kill_count ) } ) then
-    sed -nu "/^20 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is unstoppable\!/'
-  else if ( { ( grep -qa "^22 $killer_check" $kill_count ) } ) then
-    sed -nu "/^22 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is a god\!/'
-  else if ( { ( grep -qa "^25 $killer_check" $kill_count ) } ) then
-    sed -nu "/^25 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is a cheater\!\!/'
-  else if ( { ( grep -qa "^27 $killer_check" $kill_count ) } ) then
-    sed -nu "/^27 $killer_check/p" $kill_count | sed -u 's/^.../\/say /;s/$/, dude, stop it\!\!\!/'
+  echo -n "$kill_log" | \
+  sed -u 's/ killed.*$/\n/;s/... //' | tee $killer >> $kill_count\_check
+  echo -n "$kill_log" | \
+  sed -u 's/ with.*$//;s/.*killed ... //' > $killer\_clear &
+  $sedimp "/`tee < $killer\_clear`/d" $kill_count\_check
+  sort $kill_count\_check | uniq -c | sed -u 's/^ *//' > $kill_count
+  if ( { ( grep -qa "^5 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^5 `tee < $killer`/p" $kill_count | sed -u 's/^../\/say /;s/$/ is a killer\!/'
+  else if ( { ( grep -qa "^8 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^8 `tee < $killer`/p" $kill_count | sed -u 's/^../\/say /;s/$/ is violent\!/'
+  else if ( { ( grep -qa "^11 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^11 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is dominating\!/'
+  else if ( { ( grep -qa "^14 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^14 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is crazy\!/'
+  else if ( { ( grep -qa "^17 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^17 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is taking over\!/'
+  else if ( { ( grep -qa "^20 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^20 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is unstoppable\!/'
+  else if ( { ( grep -qa "^22 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^22 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is a god\!/'
+  else if ( { ( grep -qa "^25 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^25 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/ is a cheater\!\!/'
+  else if ( { ( grep -qa "^27 `tee < $killer`" $kill_count ) } ) then
+    sed -nu "/^27 `tee < $killer`/p" $kill_count | sed -u 's/^.../\/say /;s/$/, dude, stop it\!\!\!/'
   endif
 endif
 goto kill_log
