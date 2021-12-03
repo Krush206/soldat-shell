@@ -28,7 +28,7 @@ if ( { ( echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$' ) } && !
   setenv joiner "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo -n "$bal_log" | \
   sed -u 's/ joining.*//' > $players/`echo -n $joiner`
-  eval $sedimp "/^$joiner"\$"/ s/^/Used /" $bal_ids
+  eval $sedimp "'/^$joiner"\$"/ s/^/Used /'" $bal_ids
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
   echo -n "$bal_log" | \
   sed -u 's/ has joined alpha team\.$//' > $players/joiner_io &
@@ -77,7 +77,7 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left alpha team\.$' ) } ) t
     echo -n "$bal_log" | \
     setenv alpha_io2_check "`sed -u 's/ has left alpha team\.//'`"
     grep -FHax "$alpha_io2_check" $players/[1-9]* | \
-    eval $sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
+    eval $sedimp "'/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //'" $bal_ids
     find /tmp/ -mindepth 2 -name `grep -FHax "$alpha_io2_check" $players/[1-9]* | \
     sed -u 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; >& /dev/null
   else
@@ -90,7 +90,7 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left bravo team\.$' ) } ) t
     echo -n "$bal_log" | \
     setenv bravo_io2_check "`sed -u 's/ has left bravo team\.//'`"
     grep -FHax "$bravo_io2_check" $players/[1-9]* | \
-    eval $sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
+    eval $sedimp "'/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //'" $bal_ids
     find /tmp/ -mindepth 2 -name `grep -FHax "$bravo_io2_check" $players/[1-9]* | \
     sed -u 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; >& /dev/null
   else
@@ -103,7 +103,7 @@ else if ( { ( echo -n "$bal_log" | grep -qa '^.* has left spectators$' ) } ) the
     echo -n "$bal_log" | \
     setenv spectators_io2_check "`sed -u 's/ has left spectators//'`"
     grep -FHax "$spectators_io2_check" $players/[1-9]* | \
-    eval $sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
+    eval $sedimp "'/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //'" $bal_ids
     find /tmp/ -mindepth 2 -name `grep -FHax "$spectators_io2_check" $players/[1-9]* | \
     sed -u 's/:.*//;s/.*[^0-9]//'` -exec unlink '{}' \; >& /dev/null
   else
