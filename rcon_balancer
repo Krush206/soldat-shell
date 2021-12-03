@@ -28,7 +28,7 @@ if ( { ( echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$' ) } && !
   setenv joiner "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo -n "$bal_log" | \
   sed -u 's/ joining.*//' > $players/`echo -n $joiner`
-  eval $sedimp "'/^$joiner"\$"/ s/^/Used /'" $bal_ids
+  eval $sedimp '"/^$joiner"\$"/ s/^/Used /"' $bal_ids
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
   echo -n "$bal_log" | \
   sed -u 's/ has joined alpha team\.$//' > $players/joiner_io &
