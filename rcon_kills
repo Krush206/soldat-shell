@@ -22,7 +22,7 @@ if ( { ( echo -n "$kill_log" | grep -qa '^([0-9]*) .* killed ([0-9]*) .* with .*
   sed -u 's/ killed.*$/\n/;s/... //' | tee $killer >> $kill_count\_check
   echo -n "$kill_log" | \
   sed -u 's/ with.*$//;s/.*killed ... //' > $killer\_clear &
-  $sedimp "/`tee < $killer\_clear`/d" $kill_count\_check
+  eval $sedimp "/`tee < $killer\_clear`/d" $kill_count\_check
   sort $kill_count\_check | uniq -c | sed -u 's/^ *//' > $kill_count
   if ( { ( grep -qa "^5 `tee < $killer`" $kill_count ) } ) then
     sed -nu "/^5 `tee < $killer`/p" $kill_count | sed -u 's/^../\/say /;s/$/ is a killer\!/'
