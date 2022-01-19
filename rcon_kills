@@ -17,7 +17,18 @@ echo 'The rcon_kills C shell script has been enabled!'
 kill_log:
   setenv kill_log "$<"
 
-if ( { ( echo -n "$kill_log" | grep -qa '^([0-9]*) .* killed ([0-9]*) .* with .*$' ) } ) then
+if ( { ( echo -n "$kill_log" | grep -qa '^.* joining game.*HWID:.*$' ) } && ! \
+  { ( echo -n "$kill_log" | \
+  sed -u 's/^\[//;s/].*$//' | grep -Fqxaf $killer\_list ) } && ! \
+  { ( echo -n "$kill_log" | \
+  sed -u 's/ joining.*//' | grep -Fqxaf $killer\_list ) } ) then
+  echo -n "$kill_log" | \
+  sed -u 's/ joining.*//' >> $killer\_list
+else if ( { ( echo -n "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
+  { ( echo -n "$kill_log" | \
+  grep -Fqxa "`sed -u 's/ killed.*"\$"//'`" $killer\_list ) } && \
+  { ( echo -n "$kill_log" | \
+  grep -Fqxa "`sed -u 's/ with.*"\$"//;s/.*killed ... //'`" $killer\_list ) } ) then
   echo -n "$kill_log" | \
   sed -u 's/ killed.*$/\n/;s/... //' | tee $killer >> $kill_count\_check
   echo -n "$kill_log" | \
