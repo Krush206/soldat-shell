@@ -9,6 +9,7 @@ endif
 setenv kill_count /tmp/kill_count
 setenv killer /tmp/killer
 echo -n "" > $kill_count\_check
+echo -n "" > $killer\_list
 mkfifo $killer\_clear >& /dev/null
 
 echo "$1" # RCON password
