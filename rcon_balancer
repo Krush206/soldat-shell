@@ -22,12 +22,12 @@ echo 'The rcon_balancer C shell script has been enabled!'
 bal_log:
   setenv bal_log "$<"
 
-if ( { ( echo -n "$bal_log" | grep -qa '^.* joining game (.*) HWID:.*$' ) } && ! \
+if ( { ( echo -n "$bal_log" | grep -qa '^.* joining game ([0-9]) HWID:.*$' ) } && ! \
   { ( sed -n p $players/[1-9]* >& $players/joiner_io & echo -n "$bal_log" | \
   sed -u 's/^\[//;s/].*$//' | grep -Fqxaf $players/joiner_io ) } ) then
   setenv joiner "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo -n "$bal_log" | \
-  sed -u 's/ joining.*//' > $players/`echo -n $joiner`
+  sed -u 's/ joining game .*//' > $players/`echo -n $joiner`
   eval $sedimp '"/^$joiner"\$"/ s/^/Used /"' $bal_ids
 else if ( { ( echo -n "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
   echo -n "$bal_log" | \
