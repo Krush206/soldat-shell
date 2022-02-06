@@ -4,7 +4,7 @@ setenv kill_count /tmp/kill_count
 setenv killer /tmp/killer
 : > $kill_count\_check
 : > $killer\_list
-mkfifo $killer\_clear $killer\_new >& /dev/null
+mkfifo $killer\_clear >& /dev/null
 rm -f $killer\_team
 
 echo "$1" # RCON password
@@ -34,15 +34,14 @@ else if ( { ( echo -n "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
     sed -u 's/^([0-9]) //;s/ killed ([0-9]) .* with .*$//' | tee $killer >> $kill_count\_check
     echo "$kill_log" | \
     sed -u 's/^([0-9]) .* killed ([0-9]) //;s/ with .*$//' > $killer\_clear &
-    grep -Fxavf $killer\_clear $kill_count\_check > $killer\_new &
   else
     echo "$kill_log" | \
     sed -u 's/ killed .* with .*$//' | tee $killer >> $kill_count\_check
     echo "$kill_log" | \
     sed -u 's/ with .*$//;s/.* killed //' > $killer\_clear &
-    grep -Fxavf $killer\_clear $kill_count\_check > $killer\_new &
   endif
-  tee < $killer\_new > $kill_count\_check
+  tee < $kill_count\_check > $kill_count\_new
+  grep -Fxavf $killer\_clear $kill_count\_new > $kill_count\_check
   sort $kill_count\_check | uniq -c | sed -u 's/^ *//' > $kill_count
   if ( { ( echo -n "5 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
     tee < $killer | sed -u 's/^/\/say /;s/$/ is a killer\!/'
