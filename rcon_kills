@@ -41,27 +41,27 @@ else if ( { ( echo -n "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
     echo "$kill_log" | \
     sed -u 's/ with .*$//;s/.* killed //' > $killer\_clear &
   endif
-  tee < $kill_count\_check > $kill_count\_new
+  cat < $kill_count\_check > $kill_count\_new
   grep -Fxavf $killer\_clear $kill_count\_new > $kill_count\_check
   sort $kill_count\_check | uniq -c | sed -u 's/^ *//' > $kill_count
-  if ( { ( echo -n "5 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is a killer\!/'
-  else if ( { ( echo -n "8 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is violent\!/'
-  else if ( { ( echo -n "11 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is dominating\!/'
-  else if ( { ( echo -n "14 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is crazy\!/'
-  else if ( { ( echo -n "17 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is taking over\!/'
-  else if ( { ( echo -n "20 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is unstoppable\!/'
-  else if ( { ( echo -n "22 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is a god\!/'
-  else if ( { ( echo -n "25 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/ is a cheater\!\!/'
-  else if ( { ( echo -n "27 `tee < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    tee < $killer | sed -u 's/^/\/say /;s/$/, dude, stop it\!\!\!/'
+  if ( { ( echo -n "5 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is a killer\!/'
+  else if ( { ( echo -n "8 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is violent\!/'
+  else if ( { ( echo -n "11 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is dominating\!/'
+  else if ( { ( echo -n "14 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is crazy\!/'
+  else if ( { ( echo -n "17 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is taking over\!/'
+  else if ( { ( echo -n "20 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is unstoppable\!/'
+  else if ( { ( echo -n "22 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is a god\!/'
+  else if ( { ( echo -n "25 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/ is a cheater\!\!/'
+  else if ( { ( echo -n "27 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+    cat < $killer | sed -u 's/^/\/say /;s/$/, dude, stop it\!\!\!/'
   endif
 endif
 goto kill_log
