@@ -44,23 +44,23 @@ else if ( { ( echo -n "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
   cat < $kill_count\_check > $kill_count\_new
   grep -Fxavf $killer\_clear $kill_count\_new > $kill_count\_check
   sort $kill_count\_check | uniq -c | sed -u 's/^ *//' > $kill_count
-  if ( { ( echo -n "5 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  if ( { ( sed -u 's/^/5 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is a killer\!/' < $killer
-  else if ( { ( echo -n "8 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/8 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is violent\!/' < $killer
-  else if ( { ( echo -n "11 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/11 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is dominating\!/' < $killer
-  else if ( { ( echo -n "14 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/14 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is crazy\!/' < $killer
-  else if ( { ( echo -n "17 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/17 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is taking over\!/' < $killer
-  else if ( { ( echo -n "20 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/20 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is unstoppable\!/' < $killer
-  else if ( { ( echo -n "22 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/22 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is a god\!/' < $killer
-  else if ( { ( echo -n "25 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/25 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/ is a cheater\!\!/' < $killer
-  else if ( { ( echo -n "27 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
+  else if ( { ( sed -u 's/^/27 /' < $killer | grep -Fxqaf $kill_count ) } ) then
     sed -u 's/^/\/say /;s/$/, dude, stop it\!\!\!/' < $killer
   endif
 endif
