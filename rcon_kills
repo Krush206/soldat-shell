@@ -45,23 +45,23 @@ else if ( { ( echo -n "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
   grep -Fxavf $killer\_clear $kill_count\_new > $kill_count\_check
   sort $kill_count\_check | uniq -c | sed -u 's/^ *//' > $kill_count
   if ( { ( echo -n "5 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is a killer\!/'
+    sed -u 's/^/\/say /;s/$/ is a killer\!/' < $killer
   else if ( { ( echo -n "8 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is violent\!/'
+    sed -u 's/^/\/say /;s/$/ is violent\!/' < $killer
   else if ( { ( echo -n "11 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is dominating\!/'
+    sed -u 's/^/\/say /;s/$/ is dominating\!/' < $killer
   else if ( { ( echo -n "14 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is crazy\!/'
+    sed -u 's/^/\/say /;s/$/ is crazy\!/' < $killer
   else if ( { ( echo -n "17 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is taking over\!/'
+    sed -u 's/^/\/say /;s/$/ is taking over\!/' < $killer
   else if ( { ( echo -n "20 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is unstoppable\!/'
+    sed -u 's/^/\/say /;s/$/ is unstoppable\!/' < $killer
   else if ( { ( echo -n "22 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is a god\!/'
+    sed -u 's/^/\/say /;s/$/ is a god\!/' < $killer
   else if ( { ( echo -n "25 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/ is a cheater\!\!/'
+    sed -u 's/^/\/say /;s/$/ is a cheater\!\!/' < $killer
   else if ( { ( echo -n "27 `cat < $killer`" | grep -Fxqaf $kill_count ) } ) then
-    cat < $killer | sed -u 's/^/\/say /;s/$/, dude, stop it\!\!\!/'
+    sed -u 's/^/\/say /;s/$/, dude, stop it\!\!\!/' < $killer
   endif
 endif
 goto kill_log
