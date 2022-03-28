@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+set echo_style = none
 
 echo "$1" # RCON password
 echo 'The rcon_commands C shell script has been enabled!'
@@ -6,27 +7,27 @@ echo 'The rcon_commands C shell script has been enabled!'
 cmds:
   setenv cmds "$<"
 
-if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!cmds$' ) } ) then
+if ( { ( echo "$cmds" | grep -qa '^\[.*] \!cmds$' ) } ) then
   echo "/say \!date, \!info, \!script, \!red, \!blue, \!spec"
-else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!script$' || \
-echo -n "$cmds" | grep -qa '^\[.*] \!license$' || \
-echo -n "$cmds" | grep -qa '^\[.*] \!source$' ) } ) then
+else if ( { ( echo "$cmds" | grep -qa '^\[.*] \!script$' || \
+echo "$cmds" | grep -qa '^\[.*] \!license$' || \
+echo "$cmds" | grep -qa '^\[.*] \!source$' ) } ) then
   echo "/say Soldat Shell - A Unix shell script made by a Unix guru."
   echo "/say Soldat Shell is released under the terms of the GNU AGPLv3 license."
   echo "/say You may ask an administrator for the modified source code of this program."
   echo "/say The original source code can be found at: https://github.com/Krush206/soldat-shell"
-else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!date$' ) } ) then
+else if ( { ( echo "$cmds" | grep -qa '^\[.*] \!date$' ) } ) then
   echo "/say `date`"
-else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!info$' ) } ) then
+else if ( { ( echo "$cmds" | grep -qa '^\[.*] \!info$' ) } ) then
   echo "/say `uname -a`"
-else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!red$' || \
-echo -n "$cmds" | grep -qa '^\[.*] \!1$' ) } ) then
+else if ( { ( echo "$cmds" | grep -qa '^\[.*] \!red$' || \
+echo "$cmds" | grep -qa '^\[.*] \!1$' ) } ) then
   echo "$cmds" | sed -u 's/] \!.*$//;s/^\[/\/setteam1 /'
-else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!blue$' || \
-echo -n "$cmds" | grep -qa '^\[.*] \!2$' ) } ) then
+else if ( { ( echo "$cmds" | grep -qa '^\[.*] \!blue$' || \
+echo "$cmds" | grep -qa '^\[.*] \!2$' ) } ) then
   echo "$cmds" | sed -u 's/] \!.*$//;s/^\[/\/setteam2 /'
-else if ( { ( echo -n "$cmds" | grep -qa '^\[.*] \!spec$' || \
-echo -n "$cmds" | grep -qa '^\[.*] \!5$' ) } ) then
+else if ( { ( echo "$cmds" | grep -qa '^\[.*] \!spec$' || \
+echo "$cmds" | grep -qa '^\[.*] \!5$' ) } ) then
   echo "$cmds" | sed -u 's/] \!.*$//;s/^\[/\/setteam5 /'
 endif
 goto cmds

@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+set echo_style = none
 
 echo "$1" # RCON password
 echo 'The rcon_announce C shell script has been enabled!'

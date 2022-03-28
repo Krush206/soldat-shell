@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+set echo_style = none
 
 setenv kill_count /tmp/kill_count
 setenv killer /tmp/killer
@@ -13,22 +14,22 @@ echo 'The rcon_kills C shell script has been enabled!'
 kill_log:
   setenv kill_log "$<"
 
-if ( { ( echo -n "$kill_log" | \
+if ( { ( echo "$kill_log" | \
   grep -qa '^.* joining game ([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*:[0-9]*) HWID:.*$' ) } && ! \
-  { ( echo -n "$kill_log" | \
+  { ( echo "$kill_log" | \
   sed -u 's/^\[//;s/].*$//' | grep -Fqxaf $killer\_list ) } && ! \
-  { ( echo -n "$kill_log" | \
+  { ( echo "$kill_log" | \
   sed -u 's/ joining game .*//' | grep -Fqxaf $killer\_list ) } ) then
   echo "$kill_log" | \
   sed -u 's/ joining game .*//' >> $killer\_list
-else if ( { ( echo -n "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
-  { ( echo -n "$kill_log" | \
+else if ( { ( echo "$kill_log" | grep -qa '^.* killed .* with .*$' ) } && \
+  { ( echo "$kill_log" | \
   sed -u 's/ killed .* with .*$//' | grep -Fqxaf $killer\_list || \
-  echo -n "$kill_log" | tee $killer\_team | \
+  echo "$kill_log" | tee $killer\_team | \
   sed -u 's/^([0-9]) //;s/ killed ([0-9]) .* with .*$//' | grep -Fqxaf $killer\_list ) } && \
-  { ( echo -n "$kill_log" | \
+  { ( echo "$kill_log" | \
   sed -u 's/ with .*$//;s/.* killed //' | grep -Fqxaf $killer\_list || \
-  echo -n "$kill_log" | tee $killer\_team | \
+  echo "$kill_log" | tee $killer\_team | \
   sed -u 's/^([0-9]) .* killed ([0-9]) //;s/ with .*$//' | grep -Fqxaf $killer\_list ) } ) then
   if ( -e $killer\_team ) then
     echo "$kill_log" | \
