@@ -25,7 +25,7 @@ bal_log:
 
 if ( { ( echo "$bal_log" | \
   grep -qa '^.* joining game ([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*:[0-9]*) HWID:.*$' ) } && ! \
-  { ( sed -n p $players/[1-9]* >& $players/joiner_io & echo "$bal_log" | \
+  { ( cat $players/[1-9]* >& $players/joiner_io & echo "$bal_log" | \
   sed -u 's/^\[//;s/].*$//' | grep -Fqxaf $players/joiner_io ) } ) then
   setenv joiner "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo "$bal_log" | \
