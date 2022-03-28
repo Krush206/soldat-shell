@@ -4,7 +4,7 @@ set echo_style = none
 echo "$1" # RCON password
 echo 'The rcon_announce C shell script has been enabled!'
 
-while 1
+while { sleep 45 }
   echo "/say Message one."
   echo "/say Message two."
   echo "/say Message three."
@@ -16,5 +16,4 @@ while 1
   echo "/say Soldat Shell is released under the terms of the GNU AGPLv3 license."
   echo "/say You may ask an administrator for the modified source code of this program."
   echo "/say The original source code can be found at: https://github.com/Krush206/soldat-shell"
-  sleep 45
 end
