@@ -94,9 +94,11 @@ else if ( { ( echo "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
   find /tmp/ -mindepth 2 -name `grep -FHax "$spectators_io2_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
 endif
-set alpha_count = "`find $alpha/ -mindepth 1 | wc -l`"
-set bravo_count = "`find $bravo/ -mindepth 1 | wc -l`"
-if ( `dc -e "$alpha_count $bravo_count - p"` >= 2 ) then
+@ alpha_diff = `find $alpha/ -mindepth 1 | wc -l` - \
+`find $bravo/ -mindepth 1 | wc -l`
+@ bravo_diff = `find $bravo/ -mindepth 1 | wc -l` - \
+`find $alpha/ -mindepth 1 | wc -l`
+if ( $alpha_diff >= 2 ) then
   grep -FHax "$alpha_io_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam2 /'
   grep -FHax "$alpha_io_check" $players/[1-9]* | \
@@ -104,7 +106,7 @@ if ( `dc -e "$alpha_count $bravo_count - p"` >= 2 ) then
   ;s/$/ You may not join this team; teams are unbalanced./'
   rm -f $alpha/`grep -FHax "$alpha_io_check" $players/[1-9]* | \
   sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-else if ( `dc -e "$bravo_count $alpha_count - p"` >= 2 ) then
+else if ( $bravo_diff >= 2 ) then
   grep -FHax "$bravo_io_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam1 /'
   grep -FHax "$bravo_io_check" $players/[1-9]* | \
