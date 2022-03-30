@@ -5,7 +5,7 @@ echo "$1" # RCON password
 echo 'The rcon_commands C shell script has been enabled!'
 
 cmds:
-  setenv cmds "$<"
+  set cmds = `head -1`
 
 if ( { ( echo "$cmds" | grep -qa '^\[.*] \!cmds$' ) } ) then
   echo "/say \!date, \!info, \!script, \!red, \!blue, \!spec"
