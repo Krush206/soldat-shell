@@ -96,8 +96,7 @@ else if ( { ( echo "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
 endif
 @ alpha_diff = `find $alpha/ -mindepth 1 | wc -l` - \
 `find $bravo/ -mindepth 1 | wc -l`
-@ bravo_diff = `find $bravo/ -mindepth 1 | wc -l` - \
-`find $alpha/ -mindepth 1 | wc -l`
+@ bravo_diff = `find $bravo/ -mindepth 1 | wc -l` - $alpha_diff
 if ( $alpha_diff >= 2 ) then
   grep -FHax "$alpha_io_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam2 /'
