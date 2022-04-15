@@ -1,11 +1,12 @@
 #!/bin/tcsh -f
+set path = (/usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin /usr/local/games /usr/games)
 set echo_style = none
 
 echo "$1" # RCON password
 echo 'The rcon_commands C shell script has been enabled!'
 
 cmds:
-  set cmds = `head -1`
+  set cmds = "$<"
 
 if ( { ( echo "$cmds" | grep -qa '^\[.*] \!cmds$' ) } ) then
   echo "/say \!date, \!info, \!script, \!red, \!blue, \!spec"

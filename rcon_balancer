@@ -1,4 +1,5 @@
 #!/bin/tcsh -f
+set path = (/usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin /usr/local/games /usr/games)
 set echo_style = none
 if (`uname -s` == Linux) then
   set sedimp = 'sed -i'
@@ -21,7 +22,7 @@ mkfifo $players/joiner_io >& /dev/null
 echo 'The rcon_balancer C shell script has been enabled!'
 
 bal_log:
-  set bal_log = `head -1`
+  set bal_log = "$<"
 
 if ( { ( echo "$bal_log" | \
   grep -qa '^.* joining game ([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*:[0-9]*) HWID:.*$' ) } && ! \
@@ -96,7 +97,8 @@ else if ( { ( echo "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
 endif
 @ alpha_diff = `find $alpha/ -mindepth 1 | wc -l` - \
 `find $bravo/ -mindepth 1 | wc -l`
-@ bravo_diff = `find $bravo/ -mindepth 1 | wc -l` - $alpha_diff
+@ bravo_diff = `find $bravo/ -mindepth 1 | wc -l` - \
+`find $alpha/ -mindepth 1 | wc -l`
 if ( $alpha_diff >= 2 ) then
   grep -FHax "$alpha_io_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam2 /'
