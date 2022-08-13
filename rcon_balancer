@@ -2,10 +2,10 @@
 set path = (/usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin /usr/local/games /usr/games)
 set echo_style = none
 if (`uname -s` == Linux) then
-  set sedimp = 'sed -i'
+  alias sedimp 'sed -i'
 else if (`uname -s` == FreeBSD || `uname -s` == NetBSD || \
 `uname -s` == DragonFlyBSD || `uname -s` == OpenBSD) then
-  set sedimp = 'sed -i '\'''\'''
+  alias sedimp 'sed -i '\'''\'''
 endif
 
 set bal_ids = /tmp/bal_ids
@@ -31,7 +31,7 @@ if ( { ( echo "$bal_log" | \
   set joiner = "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
   echo "$bal_log" | \
   sed -u 's/ joining game .*//' > $players/`echo $joiner`
-  eval $sedimp '"/^$joiner"\$"/ s/^/Used /"' $bal_ids
+  sedimp "/^$joiner"\$"/ s/^/Used /" $bal_ids
 else if ( { ( echo "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
   echo "$bal_log" | \
   sed -u 's/ has joined alpha team\.$//' > $players/joiner_io &
@@ -71,7 +71,7 @@ else if ( { ( echo "$bal_log" | grep -qa '^.* has left alpha team\.$' ) } ) then
   echo "$bal_log" | \
   set alpha_io2_check = "`sed -u 's/ has left alpha team\.//'`"
   grep -FHax "$alpha_io2_check" $players/[1-9]* | \
-  eval $sedimp "'/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //'" $bal_ids
+  sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
   find /tmp/ -mindepth 2 -name `grep -FHax "$alpha_io2_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
 else if ( { ( echo "$bal_log" | grep -qa '^.* has left bravo team\.$' ) } ) then
@@ -81,7 +81,7 @@ else if ( { ( echo "$bal_log" | grep -qa '^.* has left bravo team\.$' ) } ) then
   echo "$bal_log" | \
   set bravo_io2_check = "`sed -u 's/ has left bravo team\.//'`"
   grep -FHax "$bravo_io2_check" $players/[1-9]* | \
-  eval $sedimp "'/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //'" $bal_ids
+  sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
   find /tmp/ -mindepth 2 -name `grep -FHax "$bravo_io2_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
 else if ( { ( echo "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
@@ -91,7 +91,7 @@ else if ( { ( echo "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
   echo "$bal_log" | \
   set spectators_io2_check = "`sed -u 's/ has left spectators//'`"
   grep -FHax "$spectators_io2_check" $players/[1-9]* | \
-  eval $sedimp "'/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //'" $bal_ids
+  sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
   find /tmp/ -mindepth 2 -name `grep -FHax "$spectators_io2_check" $players/[1-9]* | \
   sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
 endif
