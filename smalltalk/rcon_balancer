@@ -1,0 +1,276 @@
+#!/bin/gst -f
+
+(args := Smalltalk arguments) size ~= 3 ifTrue:
+[
+    ('usage: ./rcon_balancer <ip> <port> <password>',
+     (Character nl asString)) displayOn: stderr.
+    ObjectMemory quit: -1.
+].
+ip := args at: 1.
+port := args at: 2.
+password := args at: 3.
+PackageLoader fileInPackage: 'Sockets'.
+socket := Sockets.StreamSocket remote: ip port: (port asInteger).
+[
+    (password, (Character nl asString))
+    displayOn: socket.
+]
+on: Exception do: [ :e |
+    e messageText displayNl.
+    ObjectMemory quit: -1.
+].
+alist := (blist := OrderedCollection new) copy.
+atob := [ :player |
+    | bdupt bdupf |
+
+    bdupt := [
+	blist removeAtIndex: (blist indexOf: player).
+	passoc removeKey: player.
+    ].
+    bdupf := [
+	blist add: player.
+	passoc add: (player -> 'bravo').
+    ].
+    (alist size + 1) -
+    (blist size) > 1 ifTrue: [
+	(bdup value: player) ifFalse: bdupf.
+	('/setteam2 ',
+	 player,
+	 (Character nl asString)) displayOn: socket.
+    ]
+    ifFalse: [
+	(bdup value: player) ifTrue: bdupt.
+	alist add: player.
+	passoc add: (player -> 'alpha').
+    ].
+].
+btoa := [ :player |
+    | adupt adupf |
+
+    adupt := [
+	alist removeAtIndex: (alist indexOf: player).
+	passoc removeKey: player.
+    ].
+    adupf := [
+	alist add: player.
+	passoc add: (player -> 'alpha').
+    ].
+    (blist size + 1) -
+    (alist size) > 1 ifTrue: [
+	(adup value: player) ifFalse: adupf.
+	('/setteam1 ',
+	 player,
+	 (Character nl asString)) displayOn: socket.
+    ]
+    ifFalse: [
+	(adup value: player) ifTrue: adupt.
+	blist add: player.
+	passoc add: (player -> 'bravo').
+    ].
+].
+adup := [ :player |
+    | ret |
+
+    ret := true.
+    (alist indexOf: player) = 0 ifTrue: [
+	ret := false.
+    ].
+    ret.
+].
+bdup := [ :player |
+    | ret |
+
+    ret := true.
+    (blist indexOf: player) = 0 ifTrue: [
+	ret := false.
+    ].
+    ret.
+].
+aproc := [ :player |
+    | adupb bdupb val spec |
+
+    spec := [
+	passoc removeKey: (val key).
+    ].
+    adupb := [
+	atob value: player.
+    ].
+    bdupb := [
+	blist removeAtIndex: (blist indexOf: player).
+	passoc removeKey: player.
+    ].
+    (val := passoc associationAt: player ifAbsent: [
+	 nil.
+     ])
+    ifNotNil: [
+	val value ifNil: spec.
+    ].
+    alist size = 0 ifTrue: [
+	(bdup value: player) ifTrue: bdupb.
+	alist add: player.
+	passoc add: (player -> 'alpha').
+    ]
+    ifFalse: [
+	(adup value: player) ifFalse: adupb.
+    ].
+].
+(assoc := LookupTable new) add: ('joined' -> LookupTable new).
+(assoc at: 'joined') add: ('alpha' -> aproc).
+bproc := [ :player |
+    | bdupb adupb val spec |
+
+    spec := [
+	passoc removeKey: (val key).
+    ].
+    bdupb := [
+	btoa value: player.
+    ].
+    adupb := [
+	alist removeAtIndex: (alist indexOf: player).
+	passoc removeKey: player.
+    ].
+    (val := passoc associationAt: player ifAbsent: [
+	 nil.
+     ])
+    ifNotNil: [
+	val value ifNil: spec.
+    ].
+    blist size = 0 ifTrue: [
+	(adup value: player) ifTrue: adupb.
+	blist add: player.
+	passoc add: (player -> 'bravo').
+    ]
+    ifFalse: [
+	(bdup value: player) ifFalse: bdupb.
+    ].
+].
+(assoc at: 'joined') add: ('bravo' -> bproc).
+arem := [ :player |
+    alist removeAtIndex: (alist indexOf: player).
+    passoc removeKey: player.
+    (blist size) -
+    (alist size) > 1 ifTrue: [
+	| player |
+
+	alist add: (player := blist last).
+	passoc removeKey: player.
+	passoc add: (player -> 'alpha').
+	blist removeLast.
+	('/setteam1 ',
+	 player,
+	 (Character nl asString)) displayOn: socket.
+    ].
+].
+assoc add: ('left' -> LookupTable new).
+(assoc at: 'left') add: ('alpha' -> arem).
+brem := [ :player |
+    blist removeAtIndex: (blist indexOf: player).
+    passoc removeKey: player.
+    (alist size) -
+    (blist size) > 1 ifTrue: [
+	| player |
+
+	blist add: (player := alist last).
+	passoc removeKey: player.
+	passoc add: (player -> 'bravo').
+	alist removeLast.
+	('/setteam2 ',
+	 player,
+	 (Character nl asString)) displayOn: socket.
+    ].
+].
+(assoc at: 'left') add: ('bravo' -> brem).
+join := [ :line |
+    | player team res dir ret |
+
+    ret := false.
+    (res := line =~ ' has joined (alpha|bravo) team\.$')
+    matched ifTrue: [
+	team := (res match searchRegex: '(alpha|bravo)')
+		match.
+	dir := (res match searchRegex: 'joined')
+	       match.
+	player := line copyReplacingRegex: (' has joined ',
+					    team,
+					    ' team\.$')
+		       with: ''.
+	((assoc at: dir) at: team) value: player.
+	ret := true.
+    ].
+    ret.
+].
+left := [ :line |
+    | player team res dir ret |
+
+    ret := false.
+    (res := line =~ ' has left (alpha|bravo) team\.$')
+    matched ifTrue: [
+	team := (res match searchRegex: '(alpha|bravo)')
+		match.
+	dir := (res match searchRegex: 'left')
+	       match.
+	player := line copyReplacingRegex: (' has left ',
+					    team,
+					    ' team\.$')
+		       with: ''.
+	((assoc at: dir) at: team) value: player.
+	ret := true.
+    ].
+    ret.
+].
+spec := [ :line |
+    | player val ret res dir absb teamb
+      nilb notb dirj dirl dassoc team |
+
+    absb := [
+	nil.
+    ].
+    nilb := [
+	passoc add: (player -> nil).
+    ].
+    notb := [
+	(dassoc at: dir) value.
+    ].
+    dirj := [
+	(team := val value) ifNotNil: teamb.
+    ].
+    (dassoc := LookupTable new) add: ('joined' -> dirj).
+    dirl := [
+	passoc removeKey: player.
+    ].
+    dassoc add: ('left' -> dirl).
+    teamb := [
+	((assoc at: 'left') at: team)
+	value: player.
+	nilb value.
+    ].
+    ret := false.
+    (res := line =~ ' has (left|joined) spectators($|\.$)')
+    matched ifTrue: [
+	dir := (res match searchRegex: '(left|joined)')
+	       match.
+	player := line copyReplacingRegex: (' has ',
+					    dir,
+					    ' spectators($|\.$)')
+		       with: ''.
+	(val := passoc associationAt: player ifAbsent: absb)
+	ifNil: nilb
+	ifNotNil: notb.
+	ret := true.
+    ].
+    ret.
+].
+passoc := LookupTable new.
+socket linesDo: [ :line |
+    (((join value: line) or: [
+	left value: line. ]) or: [
+	spec value: line. ]).
+    alist do: [ :i |
+	i displayNl.
+	'Alpha.' displayNl.
+    ].
+    blist do: [ :i |
+	i displayNl.
+	'Bravo.' displayNl.
+    ].
+].
