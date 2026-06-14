@@ -1,119 +1,371 @@
-#!/bin/tcsh -f
-set path = (/usr/local/bin /usr/local/sbin /usr/bin /usr/sbin /bin /sbin /usr/local/games /usr/games)
-set echo_style = none
-if (`uname -s` == Linux) then
-  alias sedimp 'sed -i'
-else if (`uname -s` == FreeBSD || `uname -s` == NetBSD || \
-`uname -s` == DragonFlyBSD || `uname -s` == OpenBSD) then
-  alias sedimp 'sed -i '\'''\'''
+#!/bin/tcsh -fVX
+
+if ( ! "$?main" ) then
+  echo "$1" # RCON password
+  set main = "$cwd/$0" echo_style = none \
+  players = {,}{,}{,}{,}{,} alpha = () \
+  bravo = () spec = ()
+  echo 'The rcon_balancer C shell script is enabled!'
+  while 1
+    set log = "`set argv = read ; \
+    source '$main' | ( set argv = readword ; \
+    source '$main' )`" \
+    name = "`set argv = joiner ; \
+    source '$main'`"
+    if ( "$status" ) then
+      @ id = "$name[1]"
+      shift name
+      set players[$id] = "$name"
+      continue
+    endif
+    set new = "`set argv = jalpha ; \
+    source "$main"`"
+    @ ret = "$status"
+    if ( "$ret" ) then
+      if ( ! ( "$ret" ^ 1 ) ) then
+        if ( "$#bravo" > 1 ) then
+          set bravo = ($new[1])
+          shift new
+        else
+          set bravo = ()
+        endif
+      else if ( ! ( "$ret" ^ ( 1 << 1 ) ) ) then
+        if ( "$#spec" > 1 ) then
+          set spec = ($new[1])
+          shift new
+        else
+          set spec = ()
+        endif
+      endif
+      set alpha = ($new)
+      ( set argv = calc ; source "$main" )
+      set bal = "$status"
+      if ( "$bal" ) then
+        echo "/setteam 2 $alpha[$#alpha]"
+        set bravo = ($bravo $alpha[$#alpha]) \
+        alpha[$#alpha] = ''
+        set alpha = ($alpha)
+      endif
+      continue
+    endif
+    set new = "`set argv = jbravo ; \
+    source "$main"`"
+    @ ret = "$status"
+    if ( "$ret" ) then
+      if ( ! ( "$ret" ^ 1 ) ) then
+        if ( "$#alpha" > 1 ) then
+          set alpha = ($new[1])
+          shift new
+        else
+          set alpha = ()
+        endif
+      else if ( ! ( "$ret" ^ ( 1 << 1 ) ) ) then
+        if ( "$#spec" > 1 ) then
+          set spec = ($new[1])
+          shift new
+        else
+          set spec = ()
+        endif
+      endif
+      set bravo = ($new)
+      ( set argv = calc ; source "$main" )
+      set bal = "$status"
+      if ( "$bal" ) then
+        echo "/setteam 1 $bravo[$#bravo]"
+        set alpha = ($alpha $bravo[$#bravo]) \
+        bravo[$#bravo] = ''
+        set bravo = ($bravo)
+      endif
+      continue
+    endif
+    set new = "`set argv = jspec ; \
+    source "$main"`"
+    @ ret = "$status"
+    if ( "$ret" ) then
+      if ( ! ( "$ret" ^ 1 ) ) then
+        if ( "$#alpha" > 1 ) then
+          set alpha = ($new[1])
+          shift new
+        else
+          set alpha = ()
+        endif
+      else if ( ! ( "$ret" ^ ( 1 << 1 ) ) ) then
+        if ( "$#bravo" > 1 ) then
+          set bravo = ($new[1])
+          shift new
+        else
+          set bravo = ()
+        endif
+      endif
+      set spec = ($new)
+      ( set argv = calc ; source "$main" )
+      set bal = "$status"
+      if ( ! ( "$bal" ^ 1 ) ) then
+        echo "/setteam 1 $bravo[$#bravo]"
+        set alpha = ($alpha $bravo[$#bravo]) \
+        bravo[$#bravo] = ''
+        set bravo = ($bravo)
+      else if ( ! ( "$bal" ^ ( 1 << 1 ) ) ) then
+        echo "/setteam 2 $alpha[$#alpha]"
+        set bravo = ($bravo $alpha[$#alpha]) \
+        alpha[$#alpha] = ''
+        set alpha = ($alpha)
+      endif
+      continue
+    endif
+    set new = "`set argv = lalpha ; \
+    source "$main"`"
+    if ( "$status" ) then
+      @ id = "$new[1]"
+      shift new
+      set players[$id] = '' \
+      alpha = ($new)
+      ( set argv = calc ; source "$main" )
+      set bal = "$status"
+      if ( "$bal" ) then
+        echo "/setteam 1 $bravo[$#bravo]"
+        set alpha = ($alpha $bravo[$#bravo]) \
+        bravo[$#bravo] = ''
+        set bravo = ($bravo)
+      endif
+      continue
+    endif
+    set new = "`set argv = lbravo ; \
+    source "$main"`"
+    if ( "$status" ) then
+      @ id = "$new[1]"
+      shift new
+      set players[$id] = '' \
+      bravo = ($new)
+      ( set argv = calc ; source "$main" )
+      set bal = "$status"
+      if ( "$bal" ) then
+        echo "/setteam 2 $alpha[$#alpha]"
+        set bravo = ($bravo $alpha[$#alpha]) \
+        alpha[$#alpha] = ''
+        set alpha = ($alpha)
+      endif
+      continue
+    endif
+    set new = "`set argv = lspec ; \
+    source "$main"`"
+    if ( "$status" ) then
+      @ id = "$new[1]"
+      shift new
+      set players[$id] = '' \
+      spec = ( $new )
+    endif
+  end
 endif
 
-set bal_ids = /tmp/bal_ids
-set alpha = /tmp/alpha
-set bravo = /tmp/bravo
-set spectators = /tmp/spectators
-set players = /tmp/players
-
-echo "$1" # RCON password
-rm -rf $players $alpha $bravo >& /dev/null
-seq 1 32 > $bal_ids
-mkdir $alpha $bravo $players >& /dev/null
-mkfifo $players/joiner_io >& /dev/null
-echo 'The rcon_balancer C shell script has been enabled!'
-
-bal_log:
-  set bal_log = "$<"
-
-if ( { ( echo "$bal_log" | \
-  grep -qa '^.* joining game ([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*:[0-9]*) HWID:.*$' ) } && ! \
-  { ( cat $players/[1-9]* >& $players/joiner_io & echo "$bal_log" | \
-  sed -u 's/^\[//;s/].*$//' | grep -Fqxaf $players/joiner_io ) } ) then
-  set joiner = "`sed -nu '/^[0-9]/{p;q;}' $bal_ids`"
-  echo "$bal_log" | \
-  sed -u 's/ joining game .*//' > $players/`echo $joiner`
-  sedimp "/^$joiner"\$"/ s/^/Used /" $bal_ids
-else if ( { ( echo "$bal_log" | grep -qa '^.* has joined alpha team\.$' ) } ) then
-  echo "$bal_log" | \
-  sed -u 's/ has joined alpha team\.$//' > $players/joiner_io &
-  grep -Fqxaf $players/joiner_io $players/[1-9]* || goto bal_log
-  echo "$bal_log" | \
-  set alpha_io_check = "`sed -u 's/ has joined alpha team\.//'`"
-  ln $players/`grep -FHax "$alpha_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` $alpha/`grep -FHax "$alpha_io_check" \
-  $players/[1-9]* | sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-  rm -f $bravo/`grep -FHax "$alpha_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-else if ( { ( echo "$bal_log" | grep -qa '^.* has joined bravo team\.$' ) } ) then
-  echo "$bal_log" | \
-  sed -u 's/ has joined bravo team\.$//' > $players/joiner_io &
-  grep -Fqxaf $players/joiner_io $players/[1-9]* || goto bal_log
-  echo "$bal_log" | \
-  set bravo_io_check = "`sed -u 's/ has joined bravo team\.//'`"
-  ln $players/`grep -FHax "$bravo_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` $bravo/`grep -FHax "$bravo_io_check" \
-  $players/[1-9]* | sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-  rm -f $alpha/`grep -FHax "$bravo_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-else if ( { ( echo "$bal_log" | grep -qa '^.* has joined spectators\.$' ) } ) then
-  echo "$bal_log" | \
-  sed -u 's/ has joined spectators\.$//' > $players/joiner_io &
-  grep -Fqxaf $players/joiner_io $players/[1-9]* || goto bal_log
-  echo "$bal_log" | \
-  set spectators_io_check = "`sed -u 's/ has joined spectators\.//'`"
-  rm -f $alpha/`grep -FHax "$spectators_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-  rm -f $bravo/`grep -FHax "$spectators_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-else if ( { ( echo "$bal_log" | grep -qa '^.* has left alpha team\.$' ) } ) then
-  echo "$bal_log" | \
-  sed -u 's/ has left alpha team\.$//' > $players/joiner_io &
-  grep -Fqxaf $players/joiner_io $players/[1-9]* || goto bal_log
-  echo "$bal_log" | \
-  set alpha_io2_check = "`sed -u 's/ has left alpha team\.//'`"
-  grep -FHax "$alpha_io2_check" $players/[1-9]* | \
-  sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
-  find /tmp/ -mindepth 2 -name `grep -FHax "$alpha_io2_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
-else if ( { ( echo "$bal_log" | grep -qa '^.* has left bravo team\.$' ) } ) then
-  echo "$bal_log" | \
-  sed -u 's/ has left bravo team\.$//' > $players/joiner_io &
-  grep -Fqxaf $players/joiner_io $players/[1-9]* || goto bal_log
-  echo "$bal_log" | \
-  set bravo_io2_check = "`sed -u 's/ has left bravo team\.//'`"
-  grep -FHax "$bravo_io2_check" $players/[1-9]* | \
-  sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
-  find /tmp/ -mindepth 2 -name `grep -FHax "$bravo_io2_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
-else if ( { ( echo "$bal_log" | grep -qa '^.* has left spectators$' ) } ) then
-  echo "$bal_log" | \
-  sed -u 's/ has left spectators$//' > $players/joiner_io &
-  grep -Fqxaf $players/joiner_io $players/[1-9]* || goto bal_log
-  echo "$bal_log" | \
-  set spectators_io2_check = "`sed -u 's/ has left spectators//'`"
-  grep -FHax "$spectators_io2_check" $players/[1-9]* | \
-  sedimp "/^Used `sed -u 's/:.*//;s/.*[^0-9]//'`"\$"/ s/Used //" $bal_ids
-  find /tmp/ -mindepth 2 -name `grep -FHax "$spectators_io2_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//'` -exec rm -f '{}' \; >& /dev/null
-endif
-@ alpha_diff = `find $alpha/ -mindepth 1 | wc -l` - \
-`find $bravo/ -mindepth 1 | wc -l`
-@ bravo_diff = `find $bravo/ -mindepth 1 | wc -l` - \
-`find $alpha/ -mindepth 1 | wc -l`
-if ( $alpha_diff >= 2 ) then
-  grep -FHax "$alpha_io_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam2 /'
-  grep -FHax "$alpha_io_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/pm / \
-  ;s/$/ You may not join this team; teams are unbalanced./'
-  rm -f $alpha/`grep -FHax "$alpha_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-else if ( $bravo_diff >= 2 ) then
-  grep -FHax "$bravo_io_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/setteam1 /'
-  grep -FHax "$bravo_io_check" $players/[1-9]* | \
-  sed -u 's/:.*//;s/.*[^0-9]//' | sed -u 's/^/\/pm / \
-  ;s/$/ You may not join this team; teams are unbalanced./'
-  rm -f $bravo/`grep -FHax "$bravo_io_check" $players/[1-9]* | \
-  sed -u "s/:.*//;s/.*[^0-9]//"` >& /dev/null
-endif
-goto bal_log
+switch ("$1")
+  case 'joiner':
+    if ( "$#log" < 5 ) exit
+    @ joiner = ( $#log - 4 ) \
+    login = ( $#log - 3 )
+    if ( "$log[$login-]" =~ 'joining game (*.*.*.*:*) HWID:*' ) then
+      if ( ( "$players[1]" != '' ) && \
+      ( { ( set argv = ( plist "`echo '$log[-$joiner]' | \
+      sed -u 's/^\[//;s/]"\$"//'`" ) ; \
+      source "$main" ) } ) ) exit
+      @ i = 1
+      while ("$i" <= "$#players")
+        if ("$players[$i]" == '') break
+        @ i++
+      end
+      echo "$i"
+      echo "$log[-$joiner]"
+      exit 1
+    endif
+    exit
+  case 'jalpha':
+    @ i = 1
+    while ( "$i" <= "$#players" )
+      if ( "$log" == "$players[$i] has joined alpha team." ) then
+        @ j = 1 is_set = 0
+        while ( "$j" <= "$#bravo" || "$j" <= "$#spec" )
+          ( ( exit ( - ! ( "$#bravo" && "$#bravo" <= "$j" ) ) ) && \
+          ( exit ( ! ( "$bravo[$j]" ^ "$i" ) ) ) )
+          @ is_set = "$status"
+          if ( ! ( "$is_set" ^ 1 ) ) then
+            set bravo[$j] = ''
+            echo "$bravo"
+            break
+          endif
+          ( ( exit ( - ! ( "$#spec" && "$#spec" <= "$j" ) ) ) && \
+          ( exit ( ( ! ( "$spec[$j]" ^ "$i" ) ) << 1 ) ) )
+          @ is_set = "$status"
+          if ( ! ( "$is_set" ^ ( 1 << 1 ) ) ) then
+            set spec[$j] = ''
+            echo "$spec"
+            break
+          endif
+          @ j++
+        end
+        set alpha = ($alpha $i)
+        ( set argv = alist ; source "$main" )
+        if ( ! "$is_set" ) exit ( 1 << 2 )
+        exit ( "$is_set" )
+      endif
+      @ i++
+    end
+    exit
+  case 'jbravo':
+    @ i = 1
+    while ( "$i" <= "$#players" )
+      if ( "$log" == "$players[$i] has joined bravo team." ) then
+        @ j = 1 is_set = 0
+        while ( "$j" <= "$#alpha" || "$j" <= "$#spec" )
+          ( ( exit ( - ! ( "$#alpha" && "$#alpha" <= "$j" ) ) ) && \
+          ( exit ( ! ( "$alpha[$j]" ^ "$i" ) ) ) )
+          @ is_set = "$status"
+          if ( ! ( "$is_set" ^ 1 ) ) then
+            set alpha[$j] = ''
+            echo "$alpha"
+            break
+          endif
+          ( ( exit ( - ! ( "$#spec" && "$#spec" <= "$j" ) ) ) && \
+          ( exit ( ( ! ( "$spec[$j]" ^ "$i" ) ) << 1 ) ) )
+          @ is_set = "$status"
+          if ( ! ( "$is_set" ^ ( 1 << 1 ) ) ) then
+            set spec[$j] = ''
+            echo "$spec"
+            break
+          endif
+          @ j++
+        end
+        set bravo = ($bravo $i)
+        ( set argv = blist ; source "$main" )
+        if ( ! "$is_set" ) exit ( 1 << 2 )
+        exit ( "$is_set" )
+      endif
+      @ i++
+    end
+    exit
+  case 'jspec':
+    @ i = 1
+    while ( "$i" <= "$#players" )
+      if ( "$log" == "$players[$i] has joined spectators." ) then
+        @ j = 1 is_set = 0
+        while ( "$j" <= "$#alpha" || "$j" <= "$#bravo" )
+          ( ( exit ( - ! ( "$#alpha" && "$#alpha" <= "$j" ) ) ) && \
+          ( exit ( ! ( "$alpha[$j]" ^ "$i" ) ) ) )
+          @ is_set = "$status"
+          if ( ! ( "$is_set" ^ 1 ) ) then
+            set alpha[$j] = ''
+            echo "$alpha"
+            break
+          endif
+          ( ( exit ( - ! ( "$#bravo" && "$#bravo" <= "$j" ) ) ) && \
+          ( exit ( ( ! ( "$bravo[$j]" ^ "$i" ) ) << 1 ) ) )
+          @ is_set = "$status"
+          if ( ! ( "$is_set" ^ ( 1 << 1 ) ) ) then
+            set bravo[$j] = ''
+            echo "$bravo"
+            break
+          endif
+          @ j++
+        end
+        set spec = ($spec $i)
+        ( set argv = slist ; source "$main" )
+        if ( ! "$is_set" ) exit ( 1 << 2 )
+        exit ( "$is_set" )
+      endif
+      @ i++
+    end
+    exit
+  case 'lalpha':
+    @ i = 1
+    while ( "$i" <= "$#players" )
+      if ( "$log" == "$players[$i] has left alpha team." ) then
+        @ j = 1
+        while ( "$j" <= "$#alpha" )
+          if ( ! ( "$alpha[$j]" ^ "$i" ) ) then
+            set alpha[$j] = ''
+            break
+          endif
+          @ j++
+        end
+        echo "$i"
+        ( set argv = alist ; source "$main" )
+        exit 1
+      endif
+      @ i++
+    end
+    exit
+  case 'lbravo':
+    @ i = 1
+    while ( "$i" <= "$#players" )
+      if ( "$log" == "$players[$i] has left bravo team." ) then
+        @ j = 1
+        while ( "$j" <= "$#bravo" )
+          if ( ! ( "$bravo[$j]" ^ "$i" ) ) then
+            set bravo[$j] = ''
+            break
+          endif
+          @ j++
+        end
+        echo "$i"
+        ( set argv = blist ; source "$main" )
+        exit 1
+      endif
+      @ i++
+    end
+    exit
+  case 'lspec':
+    @ i = 1
+    while ( "$i" <= "$#players" )
+      if ( "$log" == "$players[$i] has left spectators" ) then
+        @ j = 1
+        while ( "$j" <= "$#spec" )
+          if ( ! ( "$spec[$j]" ^ "$i" ) ) then
+            set spec[$j] = ''
+            break
+          endif
+          @ j++
+        end
+        echo "$i"
+        ( set argv = slist ; source "$main" )
+        exit 1
+      endif
+      @ i++
+    end
+    exit
+  case 'calc':
+    @ alphac = ( "$#alpha" - "$#bravo" )
+    @ bravoc = ( "$#bravo" - "$#alpha" )
+    if ( "$alphac" > 1 ) exit 1
+    if ( "$bravoc" > 1 ) exit ( 1 << 1 )
+    exit
+  case 'plist':
+    shift
+    foreach plist ($players:q)
+      if ( "$plist" == "$1" ) exit
+    end
+    exit 1
+  case 'alist':
+    foreach alist ($alpha)
+      echo "$alist"
+    end
+    exit
+  case 'blist':
+    foreach blist ($bravo)
+      echo "$blist"
+    end
+    exit
+  case 'slist':
+    foreach slist ($spec)
+      echo "$slist"
+    end
+    exit
+  case 'read':
+    echo "$<"
+    exit
+  case 'readword':
+    foreach word ( "`tr ' ' '\n'`" )
+      echo "$word"
+    end
+    exit
+  default:
+    echo "Function $1 not set."
+endsw
