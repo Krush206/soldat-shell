@@ -4,27 +4,28 @@
 #include <thread.h>
 #include <9p.h>
 
-struct Team {
-	File *entry;
+struct Player {
+	int team;
+	int id;
 	char *name;
-	struct Team *next;
+	struct Player *next;
 };
-
-static File *ctl;
 
 static char Einvalid[] = "invalid control";
 static char Ebig[] = "too big an input";
 static char Eperm[] = "permission denied";
 
-static struct Team alpha = {
-	nil,
+static struct {
+	File *add;
+	File *rm;
+	File *list;
+} ctl;
+
+static struct Player player = {
+	0,
+	0,
 	"",
-	&alpha
-};
-static struct Team bravo = {
-	nil,
-	"",
-	&bravo
+	&player
 };
 
 int
@@ -34,68 +35,21 @@ threadmaybackground(void)
 }
 
 static void
-createalpha(File *root)
+createplayer(void)
 {
 	int i;
-	struct Team **node;
-	File *dir;
+	struct Player **node;
 
-	dir = createfile(root, "alpha", nil, 0664 | DMDIR, nil);
-	node = &alpha.next;
+	node = &player.next;
 	for(i = 1; i <= 32; i++)
 	{
-		char id[8];
-
 		*node = emalloc9p(sizeof **node);
-		snprint(id, sizeof id, "%d", i);
-		(*node)->entry = createfile(dir, id, nil, 0664, nil);
+		(*node)->team = 0;
+		(*node)->id = i;
 		(*node)->name = estrdup9p("");
 		node = &(*node)->next;
 	}
-	*node = &alpha;
-}
-
-static void
-createbravo(File *root)
-{
-	int i;
-	struct Team **node;
-	File *dir;
-
-	dir = createfile(root, "bravo", nil, 0664 | DMDIR, nil);
-	node = &bravo.next;
-	for(i = 1; i <= 32; i++)
-	{
-		char id[8];
-
-		*node = emalloc9p(sizeof **node);
-		snprint(id, sizeof id, "%d", i);
-		(*node)->entry = createfile(dir, id, nil, 0664, nil);
-		(*node)->name = estrdup9p("");
-		node = &(*node)->next;
-	}
-	*node = &bravo;
-}
-
-static int
-command(char *cmd)
-{
-	char *ptr;
-
-	ptr = strchr(cmd, ' ');
-	if(ptr == nil)
-		return 1;
-	if(strncmp(cmd, "/add1", ptr - cmd) == 0)
-	{
-		addalpha(ptr + 1);
-		return 0;
-	}
-	if(strncmp(cmd, "/add2", ptr - cmd) == 0)
-	{
-		addbravo(ptr + 1);
-		return 0;
-	}
-	return 1;
+	*node = &player;
 }
 
 static void
@@ -107,24 +61,6 @@ fsread(Req *r)
 static void
 fswrite(Req *r)
 {
-	File *f;
-	char cmd[64];
-
-	f = r->fid->file;
-	if(f != ctl)
-	{
-		respond(r, Eperm);
-		return;
-	}
-	if(r->ifcall.count >= sizeof cmd)
-	{
-		respond(r, Ebig);
-		return;
-	}
-	strncpy(cmd, r->ifcall.data, r->ifcall.count);
-	cmd[r->ifcall.count] = '\0';
-	r->ofcall.count = r->ifcall.count;
-	command(cmd);
 	respond(r, nil);
 }
 
@@ -162,9 +98,10 @@ threadmain(int argc, char *argv[])
 	if(argc != 1)
 		return;
 	fs.tree = alloctree(nil, nil, 0777 | DMDIR, nil);
-	createalpha(fs.tree->root);
-	createbravo(fs.tree->root);
-	ctl = createfile(fs.tree->root, "ctl", nil, 0660, nil);
+	createplayer();
+	ctl.add = createfile(fs.tree->root, "add", nil, 0660, nil);
+	ctl.rm = createfile(fs.tree->root, "remove", nil, 0660, nil);
+	ctl.list = createfile(fs.tree->root, "list", nil, 0664, nil);
 	srvname = "rcon_balancer";
 	threadpostmountsrv(&fs, srvname, nil, MBEFORE);
 	threadexits(nil);
